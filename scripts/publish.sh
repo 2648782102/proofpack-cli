@@ -54,9 +54,10 @@ export NPM_CONFIG_USERCONFIG
 trap 'rm -f "$NPM_CONFIG_USERCONFIG"; unset NPM_TOKEN' EXIT HUP INT TERM
 printf '//registry.npmjs.org/:_authToken=%s\n' "$NPM_TOKEN" > "$NPM_CONFIG_USERCONFIG"
 
-npm publish --access public $PROVENANCE_ARGS
-publish_status=$?
-if [ "$publish_status" -ne 0 ]; then
+if npm publish --access public $PROVENANCE_ARGS; then
+  :
+else
+  publish_status=$?
   echo "npm publish failed; the version may not exist on the registry." >&2
   echo "Check token scope: unscoped proofpack-cli requires all-packages access or an explicit proofpack-cli package grant, not only @2648782102h." >&2
   exit "$publish_status"
