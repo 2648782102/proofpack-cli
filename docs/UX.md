@@ -2,36 +2,42 @@
 
 ## First run
 
-The user runs `npx proofpack-cli check` in a Git repository. Proofpack inspects Git metadata and diffs, runs no checks, writes a Markdown report to `.proofpack/latest.md`, and prints a short summary plus the report path. If the directory is not a Git repository, it explains how to enter one. If there are no changes, it says so and does not create a misleading empty review.
+The user runs `npx proofpack-cli check` in a Git repository. Proofpack inspects Git metadata and diff statistics, runs no checks, and prints a Markdown report to stdout. Only `--output <path>` writes a file; it prints a short summary and destination paths to stderr. If the directory is not a Git repository, the CLI explains the error and suggests a next action. If there are no changes, the report states that fact and still records that no checks ran.
 
-## One-screen report
+## Explicit checks
 
-The terminal summary uses three sections only:
+Each `--run` command is previewed on stderr before execution. With a single report format and no output path, the report goes to stdout; command previews never contaminate it. With `--output`, stderr carries a concise result and the written paths.
 
 ```text
-Proofpack · 4 files changed
-
-Changed   2 modified · 1 added · 1 deleted
-Checks    1 passed · 1 failed · 2 not run
-Review    2 prompts (workflow file, dependency change)
-
-Report    .proofpack/latest.md
+Proofpack: running check 1/2: npm test
+Proofpack: running check 2/2: npm run lint
+Proofpack · 4 Git-visible files · 2 passed · 0 failed · 0 not run · 2 review prompts · report written to .proofpack/review.md
+Proofpack: wrote .proofpack/review.md
 ```
 
-The full Markdown report contains:
+`--format json` writes JSON to stdout or the output path. `--format markdown,json` requires `--output` and writes sibling `.md` and `.json` files. The CLI never opens a browser or asks setup questions.
 
-1. **Change** — base/ref used, file counts, insertions/deletions, changed paths.
-2. **Checks** — exact command, start/end time, exit status, output excerpt, truncation/redaction notes.
-3. **Not checked** — relevant default checks not explicitly run, without implying that all possible tests are known.
-4. **Review prompts** — path, matched rule, reason, and a direct diff link/anchor when feasible.
-5. **Limits** — a concise statement that this report does not establish correctness or security.
+## Full report
+
+The Markdown report contains:
+
+1. **Change** — branch/HEAD, file counts, insertions/deletions, changed paths, index/worktree flags.
+2. **Checks** — explicit commands, status, timestamps, duration, exit code/signal, bounded stdout/stderr, truncation, and redaction metadata; or a clear statement that none were supplied.
+3. **Not checked** — explicit statements that commands not supplied through `--run` were not executed and no project checks were inferred.
+4. **Review prompts** — stable rule ID, path, matched rule, reason, and evidence; unmatched rules are not evidence of safety.
+5. **Limits** — correctness, coverage, redaction, heuristic, and sandbox limitations.
+
+The JSON report uses the same `0.3` evidence model. Passing, failing, unrun, timeout, interrupted, and start-error outcomes are distinct values, never represented as one pass/fail color.
+
+## Base and sharing
+
+`--base <ref>` switches the report to committed, staged, and working-tree changes against a resolved commit. The report explicitly says untracked files are excluded and shows the base ref/commit. `--share-safe` replaces identifying fields with `[OMITTED]` and omits command output from both Markdown and JSON while preserving status counts and limitations. `--open` is an explicit last step after a written Markdown report; it never opens a stdout-only report.
 
 ## Interaction rules
 
-- No interactive setup wizard in MVP.
-- No unexplained scores, badges, or pass/fail color as the only signal.
-- A failed check and an unrun check are visually distinct.
+- No interactive setup wizard, score, badge, or “safe to merge” verdict.
 - Errors say what happened and one next action.
-- Every heuristic links to the filename and matching rule.
-- Long output is folded/collapsed in HTML in a later version; Markdown remains the canonical report.
-- The CLI respects `NO_COLOR` and terminal width and does not require a TTY.
+- Every heuristic links to the filename and stable rule ID.
+- Long command output remains bounded in both Markdown and JSON.
+- The CLI respects `NO_COLOR`, emits no color by default, and does not require a TTY.
+- HTML folding, a compact terminal dashboard, and an interactive `init` remain future work; Markdown is canonical.

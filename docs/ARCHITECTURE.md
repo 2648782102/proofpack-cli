@@ -1,43 +1,51 @@
-# Architecture proposal
+# Architecture
 
 ## Runtime shape
 
-Proofpack is a local Node.js CLI. It has no server and no browser UI in the MVP.
+Proofpack is a local Node.js CLI. Phase 3 has no server, browser UI, LLM client, network client, daemon, or telemetry. `--open` is an explicit local system-opener action.
 
 ```text
 CLI arguments
-  ├─ Git inspector (read-only subprocess)
-  ├─ optional explicit check runner (only when --run is present)
-  ├─ deterministic review-prompt rules
-  ├─ evidence normalizer and redactor
-  └─ Markdown / JSON renderers
-       └─ local report writer
+  ├─ Git inspector (read-only subprocesses)
+  │   └─ optional --base ref resolution and base diff
+  ├─ opt-in sequential check runner (only for explicit --run commands)
+  ├─ deterministic path/stat review-prompt rules
+  ├─ versioned 0.3 evidence model
+  ├─ share-safe evidence omission
+  ├─ Markdown / JSON renderers
+  ├─ stdout writer (default)
+  └─ opt-in local file writer (--output only)
+       └─ opt-in system opener (--open only)
 ```
 
-## Proposed modules
+## Implemented modules
 
-- `cli.ts`: parse args, call application flow, print concise status.
-- `git/`: Git availability, repository root, diff/status parsing.
-- `checks/`: opt-in sequential command runner; bounded output, timeout, cancellation.
-- `rules/`: small explicit path/diff heuristics returning rule IDs and explanations.
-- `report/`: versioned evidence model and Markdown/JSON renderers.
-- `security/`: redaction, path containment, symlink and output limits.
+- `src/args.ts`: parse commands, base ref, formats, output, sharing, open, timeout, and output limit; reject unknown/deferred flags.
+- `src/git.ts`: locate the repository root, parse porcelain v2 status and numstat with NUL-delimited Buffers, resolve an optional base ref with `--end-of-options`, and parse base name-status/numstat.
+- `src/checks.ts`: preview and run explicit shell commands sequentially; bound process output, sanitize control sequences, redact common secrets/home paths, track timing, timeout, interruption, and spawn errors.
+- `src/rules.ts`: deterministic path/stat review prompts with stable IDs and evidence strings.
+- `src/report.ts`: build the `0.3` evidence model, apply share-safe omission before rendering, and separate facts, heuristics, unrun checks, and limits.
+- `src/output.ts`: constrain single/multiple output paths to the repository and reject tracked files, Git metadata, outside paths, or symlink traversal.
+- `src/cli.ts`: coordinate inspection, explicit checks, rendering, stdout/file output, and documented exit codes.
+- `src/open.ts`: launch the platform's system opener only for an explicit `--open` invocation.
 
-Add a module only when it owns implemented behavior. Keep Git output parsing deterministic and covered by fixtures rather than relying on exact human-formatted output where porcelain formats exist.
+Git inspection invokes argument arrays with `GIT_OPTIONAL_LOCKS=0` and uses `rev-parse`, `status`, `diff --cached`, and `diff` only. Explicit checks invoke the user's shell through argument arrays; the shell command string itself is intentional user input, never repository-discovered configuration. No module reads repository file contents.
 
-## Data model sketch
+## Data model
 
-- `RepositorySnapshot`: repository identity (relative path only), selected base, observed status.
-- `FileChange`: relative path, change kind, insertions/deletions when available, binary flag.
-- `CheckResult`: displayed command, timestamps, exit code/signal, duration, bounded stdout/stderr, redaction/truncation markers.
-- `ReviewPrompt`: stable rule ID, path, short reason, and evidence location.
-- `Report`: schema version, generation time, above evidence, and limitations.
+- `GitSnapshot`: repository root, branch, HEAD, and observed status entries.
+- `FileChange`: repository-relative path, optional previous path, change kind, index/worktree flags, insertions/deletions when available, binary flag.
+- `CheckResult`: command, status, timestamps, duration, exit code/signal, bounded stdout/stderr, byte counts, truncation, redaction metadata, output limit, and error text.
+- `ReviewPrompt`: stable rule ID, path, optional previous path, rule, reason, and evidence.
+- `ReportDocument`: version `0.3`; repository (including optional base/untracked metadata), output, `shareSafe`, change, checks, `notChecked`, review prompts, and limitations.
 
 ## Boundaries
 
 - Git is invoked with argument arrays; avoid shell interpolation for inspection commands.
 - User commands are never discovered or run automatically.
-- No network client or model SDK in MVP.
-- Report paths are constrained to the repository unless the user passes an explicit output path.
-- Output is treated as untrusted and escaped by renderers.
+- Explicit commands run with the current user's shell, environment, and privileges; they are not sandboxed and may modify the working tree.
+- When explicit commands are supplied, Git inspection is repeated afterward so the report describes the observed post-command view.
+- Default inspection makes no network requests; no model SDK is present.
+- The default flow writes nothing to disk; explicitly supplied report paths are validated before commands run.
+- Git paths, command text, and command output are untrusted data; renderers escape/sanitize them and redaction is best-effort.
 - Future integrations consume the stable report schema; they do not access private runtime state in Conchbase.

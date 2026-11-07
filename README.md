@@ -2,25 +2,53 @@
 
 **A small, local-first acceptance report for AI-assisted code changes.**
 
-Proofpack helps an individual developer answer three questions after a coding task: what changed, what checks actually ran, and what remains unchecked. It records evidence from Git and explicitly run commands; it does not claim that a change is correct.
+Proofpack helps an individual developer answer three questions after a coding task: what changed, what checks actually ran, and what remains unchecked. It records Git change facts, explicit command evidence, and heuristic review prompts; it does not claim that a change is correct.
 
-> Early development. This repository contains product and engineering specifications plus a minimal TypeScript CLI scaffold. Evidence collection and report generation are not implemented yet.
+> Early development. Phase 3 preparation implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented.
 
 ## Product principles
 
 - One command, one readable report.
 - Local by default; no account, daemon, model API, or upload.
-- Observed facts are separated from heuristics and unchecked work.
-- Never run project commands unless the user explicitly asks Proofpack to run them.
-- Preserve the user's working tree; inspection is read-only.
+- Observed facts, heuristic prompts, and unchecked work are separated.
+- No project command runs unless the user explicitly supplies `--run`.
+- Git inspection is read-only; explicitly run commands use the user's shell and privileges without a sandbox.
 
-## Planned first use
+## First use
 
 ```sh
 npx proofpack-cli check
 ```
 
-The first release will inspect the current Git change and optionally run checks explicitly supplied by the user. See [the product spec](docs/PRODUCT.md) and [CLI contract](docs/CLI.md).
+This prints a Markdown report to stdout without changing the working tree, running project commands, or making network requests. To save it, pass an explicit path:
+
+```sh
+npx proofpack-cli check --output .proofpack/review.md
+```
+
+## Explicit checks
+
+```sh
+npx proofpack-cli check --run "npm test" --run "npm run lint"
+npx proofpack-cli check --run "npm test" --format json
+npx proofpack-cli check --run "npm test" --format markdown,json --output .proofpack/review.md
+```
+
+Each command is previewed before execution, run sequentially from the repository root through the user's shell, and recorded with timing, exit status, bounded stdout/stderr, truncation, and best-effort redaction. `--timeout <seconds>` defaults to 120 and applies per command. Multiple formats require `--output` and write sibling `.md` / `.json` files.
+
+Commands are not sandboxed and can modify the working tree. Review every command and its output before sharing a report. Passing checks are evidence of those invocations only, not proof of correctness or security.
+
+## Branch/base and sharing
+
+```sh
+npx proofpack-cli check --base main
+npx proofpack-cli check --run "npm test" --share-safe --output .proofpack/share.md
+npx proofpack-cli check --output .proofpack/review.md --open
+```
+
+`--base` compares committed, staged, and working-tree changes against a resolved Git ref and excludes untracked files from that view. `--share-safe` omits branch, HEAD, base commit, file paths, output destination, command text, command output, and prompt evidence from both Markdown and JSON; status, counts, timings, and limitations remain. `--open` is opt-in, requires a written Markdown report, and uses the system opener. It never uploads the report.
+
+Review even share-safe reports before sharing: omission is best-effort and aggregate metadata may still be sensitive.
 
 ## Development
 
@@ -44,6 +72,7 @@ npm run build
 - [Open-source references](docs/REFERENCES.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Development handoff](docs/DEVELOPMENT.md)
+- [Release checklist](docs/RELEASE.md)
 - [Decisions](docs/decisions/)
 
 ## License

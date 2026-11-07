@@ -4,36 +4,37 @@
 
 - Node.js 24+
 - TypeScript, ESM, npm
-- No runtime dependencies in the initial scaffold
+- No runtime dependencies
 
 ## Commands
 
-- `npm run dev -- check` — run source CLI during development.
+- `npm run dev -- check` — run source CLI during development (from the project root).
 - `npm run check` — TypeScript validation.
 - `npm test` — Node test runner with TypeScript fixtures.
 - `npm run build` — compile to `dist/`.
 
 ## Repository conventions
 
-- Keep behavior local and deterministic.
+- Keep behavior local and deterministic apart from intentional temporary Git fixtures and harmless explicitly created test commands.
 - Add fixtures for Git command output; tests must not depend on the user's actual repository.
 - Never run commands from fixture repositories unless the test explicitly creates a harmless controlled script.
 - Update `docs/CLI.md` when flags, exit codes, or report schema change.
 - Update `docs/SECURITY.md` whenever data collection, command execution, or network behavior changes.
 - Keep current behavior separate from planned behavior in README and docs.
 
-## First implementation sequence
+## Phase 3 implementation
 
-1. Decide whether command execution belongs in MVP; default recommendation is defer, but the CLI contract currently allows explicit `--run` as Phase 2.
-2. Implement Git discovery and status parsing as read-only functions.
-3. Define stable report schema and markdown renderer.
-4. Cover paths with spaces, unusual filenames, deleted/renamed files, binary diffs, empty repos, and no-change state.
-5. Add opt-in command runner only after security behavior is specified and reviewed.
+1. Repeatable `--run` commands are explicit, previewed, sequential, bounded, redacted on a best-effort basis, timeout-aware, and never discovered automatically.
+2. Git discovery remains read-only and uses porcelain v2 plus numstat.
+3. The `0.3` report model has Markdown and JSON renderers, share-safe omission, base metadata, and separates Git facts, observed command outcomes, heuristic prompts, unrun checks, and unknowns.
+4. Tests cover paths with spaces, unusual filenames, deleted/renamed files, binary diffs, empty repos, no-change state, ignored files, argument errors, output errors, exit codes, passing/failing/timed-out commands, output caps, redaction, review rules, base refs, and share-safe reports.
+5. Sandboxed execution, repository-local `init`, automatic check discovery, and Conchbase integrations remain deferred.
 
 ## Release readiness
 
-- No network requests in default path.
+- No network requests or telemetry in default or explicit-check paths.
 - No implicit execution of package scripts.
 - Exit codes documented and tested.
-- Reports label unrun checks and heuristic prompts clearly.
+- Reports label unrun checks, command outcomes, and heuristic prompts clearly.
 - Package contents exclude fixtures, local reports, and secrets.
+- Follow `docs/RELEASE.md` before publication; confirm the npm package, shell compatibility, Windows process-tree behavior, system opener behavior, and redaction caveats.

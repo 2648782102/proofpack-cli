@@ -15,38 +15,48 @@ Core job: “Before I keep or share this change, show me the change and the evid
 In under a minute, a user can see:
 
 1. the changed files and diff summary;
-2. the checks they explicitly asked Proofpack to run, with command, timestamp, exit status, and concise output;
+2. the checks they explicitly asked Proofpack to run, with command, timing, exit status, and bounded output;
 3. checks not run and rule-based items that deserve attention.
 
 Proofpack reports evidence, not correctness. A successful test is not proof that every behavior is correct.
 
-## MVP
+## Phase 3 — implemented
 
-- Inspect a Git working tree without modifying it.
-- Summarize changed, added, deleted, renamed, and untracked files.
-- Run only check commands explicitly passed to the current invocation; default behavior runs none.
-- Capture exit status and bounded output, redact common secret formats, and note truncation.
-- Generate a self-contained Markdown report and optional JSON evidence file under `.proofpack/`.
-- Identify a small documented set of risk signals: dependency manifests/lockfiles, CI/workflow files, permission/authentication code, migrations, secret-like filenames, and large deletions.
-- Mark signals as “review prompt”, never as a vulnerability finding.
-- Add `--open` only as an explicit user action after report generation; do not auto-open a browser.
+- Inspect a Git working tree with read-only Git subprocesses.
+- Summarize changed, added, deleted, renamed, copied, untracked, unmerged, and binary files.
+- Print a Markdown report to stdout by default; write it only with an explicit `--output <path>`.
+- Run repeatable `--run <command>` checks only when explicitly supplied; preview before execution, capture bounded output, redact common secret patterns best-effort, and mark truncation/redaction.
+- Add `--base <ref>` for committed, staged, and worktree comparisons against a resolved Git ref; untracked files are excluded from that view.
+- Add `--share-safe` omission for branch, HEAD, base commit, paths, output destination, command text, command output, and prompt evidence.
+- Add opt-in `--open` for a written Markdown report using the system opener.
+- Offer versioned `0.3` JSON alongside Markdown; multiple formats write `.md` and `.json` siblings.
+- Generate deterministic review prompts for dependency manifests/lockfiles, CI workflows, authentication/permission paths, migrations, secret-like filenames, and large deletions.
+- Separate observed facts, heuristics, unrun checks, and limitations.
+- Make no network requests, collect no telemetry, and invoke no model.
 
-## Explicitly out of scope for MVP
+## Later phases — planned
+
+- Add a reviewed `init` only if persisted per-repository defaults prove useful.
+- Publish an npm package after the release checklist and provenance review.
+- Import CI results or agent traces from documented formats.
+- Add a Conchbase adapter only after its public event contract stabilizes.
+
+## Explicitly out of scope
 
 - AI-generated review, correctness scores, automatic approval, or “safe to merge” verdicts.
 - Background monitoring, accounts, cloud storage, team dashboards, or telemetry.
-- Running package scripts discovered from the repository without an explicit command from the user.
-- Sandboxing arbitrary project commands; MVP does not run commands by default.
+- Running package scripts discovered from the repository without an explicit `--run` command.
+- Sandboxing arbitrary project commands; explicitly run commands use the user's shell and privileges.
 - Parsing proprietary agent session logs or relying on Conchbase APIs.
-- Automatically changing Git state, files, permissions, or configuration.
+- Automatically changing Git state, files, permissions, or configuration through inspection.
 
 ## Success criteria
 
 - A new user can install/run the CLI and produce a useful report without editing a config file.
-- A report makes it impossible to confuse “not run” with “passed”.
-- Default inspection makes no network requests and executes no project command.
+- A report makes it impossible to confuse “not run”, “passed”, and “failed”.
+- Default inspection makes no network requests and executes no user-supplied command.
 - A report can be understood by its author without an AI summary.
-- On a small/medium repository, report generation completes promptly and handles binary/large files safely.
+- On a small/medium repository, report generation completes promptly and handles binary/large files safely; Git file contents are never read by Proofpack.
 
 ## Product boundary with existing projects
 

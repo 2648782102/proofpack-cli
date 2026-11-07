@@ -1,11 +1,21 @@
 {
   "name": "proofpack-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local acceptance reports for AI-assisted code changes",
   "type": "module",
   "engines": { "node": ">=24" },
   "bin": { "proofpack": "dist/cli.js" },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": ["dist", "README.md", "LICENSE", "docs/RELEASE.md"],
+  "keywords": ["git", "cli", "acceptance-report", "developer-tools", "local-first"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2648782102/proofpack-cli.git"
+  },
+  "homepage": "https://github.com/2648782102/proofpack-cli#readme",
+  "bugs": {
+    "url": "https://github.com/2648782102/proofpack-cli/issues"
+  },
+  "publishConfig": { "access": "public" },
   "scripts": {
     "dev": "tsx src/cli.ts",
     "build": "tsc -p tsconfig.json",
