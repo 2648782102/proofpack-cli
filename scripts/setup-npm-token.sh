@@ -11,7 +11,7 @@ if [ "$(uname -s)" != "Darwin" ]; then
 fi
 
 echo "Create a granular npm token with publish permission and Bypass two-factor authentication."
-echo "For this unscoped package, the token must allow all packages or explicitly include proofpack-cli; a token limited to @2648782102h cannot publish it."
+echo "For this unscoped package, the token must allow all packages or explicitly include proofpack-cli, and must have Bypass two-factor authentication enabled; Read and write alone returns E403."
 echo "If a token was displayed in a local diagnostic dialog, revoke it at https://www.npmjs.com/settings/2648782102h/tokens and generate a replacement first."
 echo "A hidden macOS dialog will open; paste the new token there. It will not be echoed to this session."
 if ! command -v osascript >/dev/null 2>&1; then
