@@ -23,7 +23,7 @@ if ! NPM_TOKEN_VALUE="$(osascript -e 'display dialog "Paste the granular npm tok
   exit 2
 fi
 
-NPM_TOKEN_VALUE="$(printf '%s' "$NPM_TOKEN_VALUE" | tr -d '\r\n')"
+NPM_TOKEN_VALUE="$(printf '%s' "$NPM_TOKEN_VALUE" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
 if [ -z "$NPM_TOKEN_VALUE" ]; then
   echo "Token must not be empty." >&2
   exit 2
