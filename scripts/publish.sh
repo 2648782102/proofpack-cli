@@ -26,6 +26,15 @@ case "$NPM_TOKEN" in
 '*) echo "NPM_TOKEN must be a single-line value." >&2; exit 2 ;;
 esac
 
+if [ "${PUBLISH_MODE:-direct}" = "stage" ]; then
+  PUBLISH_COMMAND="stage publish"
+elif [ "${PUBLISH_MODE:-direct}" = "direct" ]; then
+  PUBLISH_COMMAND="publish"
+else
+  echo "PUBLISH_MODE must be 'direct' or 'stage'." >&2
+  exit 2
+fi
+
 if [ "${PROVENANCE:-0}" = "1" ]; then
   PROVENANCE_ARGS="--provenance"
 else
@@ -54,12 +63,18 @@ export NPM_CONFIG_USERCONFIG
 trap 'rm -f "$NPM_CONFIG_USERCONFIG"; unset NPM_TOKEN' EXIT HUP INT TERM
 printf '//registry.npmjs.org/:_authToken=%s\n' "$NPM_TOKEN" > "$NPM_CONFIG_USERCONFIG"
 
-if npm publish --access public $PROVENANCE_ARGS; then
+if npm $PUBLISH_COMMAND --access public $PROVENANCE_ARGS; then
   :
 else
   publish_status=$?
-  echo "npm publish failed; the version may not exist on the registry." >&2
-  echo "Check token scope and bypass-2FA: unscoped proofpack-cli requires all-packages access or an explicit proofpack-cli grant, Read and write, and Bypass two-factor authentication." >&2
+  echo "npm $PUBLISH_COMMAND failed; the version may not exist on the live registry." >&2
+  echo "Check token scope and bypass-2FA. If E_STAGE_REQUIRED appears, rerun with PUBLISH_MODE=stage and approve the staged package with 2FA." >&2
   exit "$publish_status"
 fi
-npm view "proofpack-cli@$package_version" version dist.integrity
+
+if [ "$PUBLISH_COMMAND" = "publish" ]; then
+  npm view "proofpack-cli@$package_version" version dist.integrity
+else
+  echo "Staged package submitted. Review and approve it with 2FA in npmjs.com's Staged Packages tab; the version is not live until approval."
+  npm stage list proofpack-cli --json
+fi

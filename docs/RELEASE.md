@@ -39,12 +39,13 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 
 - [ ] Verify macOS (`open`), Linux (`xdg-open`), and Windows (`cmd start`) opener behavior where available.
 - [ ] Verify Unix and Windows shell/process-tree cancellation behavior where available.
-- [ ] Log in to npm (`npm login`) and confirm a publish-capable credential. npm currently requires 2FA or a granular access token with bypass 2FA for direct publishing; `npm publish --otp <code>` may work after enabling 2FA.
-- [ ] Create a granular access token with publish permission and bypass 2FA. For unscoped `proofpack-cli`, choose package access "All packages" or explicitly include `proofpack-cli` with Read and write, and enable "Bypass two-factor authentication"; a token scoped only to `@2648782102h` or without bypass 2FA returns E403 on publish. On macOS, run `scripts/setup-npm-token.sh` to store it in Keychain with hidden input; `scripts/publish.sh` reads it without putting the token in shell history, `.npmrc`, or the repository.
+- [ ] Log in to npm (`npm login`) and confirm a publish-capable credential. npm currently requires 2FA, a granular access token with bypass 2FA, trusted publishing (OIDC), or staged publishing with 2FA approval.
+- [ ] Create a granular access token with publish permission and bypass 2FA. For unscoped `proofpack-cli`, choose package access "All packages" or explicitly include `proofpack-cli` with Read and write, and enable "Bypass two-factor authentication"; a token scoped only to `@2648782102h` or without bypass 2FA returns E403. On macOS, run `scripts/setup-npm-token.sh` to store it in Keychain with hidden input; `scripts/publish.sh` reads it without putting the token in shell history, `.npmrc`, or the repository.
 - [ ] Alternatively, expose the token as `NPM_TOKEN` only for the publish command. In `zsh`, use `read -rs NPM_TOKEN; export NPM_TOKEN` so the value is hidden and not saved in history; do not put the literal token in a command line or committed file.
 - [ ] Use `PROVENANCE=1 scripts/publish.sh` only from an environment with npm provenance support, such as GitHub Actions OIDC. Local publishing defaults to plain `npm publish`; provenance is optional and not required for the first release.
+- [ ] If npm returns `E_STAGE_REQUIRED`, run `PUBLISH_MODE=stage scripts/publish.sh`. The script stages `0.2.0`; approve it in npmjs.com's Staged Packages tab with 2FA. Enable 2FA on the npm account first if it is disabled.
 - [ ] If the registry still returns E403, stop and resolve the account policy before retrying; do not repeatedly republish.
-- [ ] If `npm publish` returns E403 with "You may not perform that action with these credentials", verify the token's package scope. If it says "Two-factor authentication or granular access token with bypass 2fa enabled is required", recreate the token with Bypass 2FA enabled. The follow-up `npm view` 404 is a consequence of the failed publish, not a second failure.
+- [ ] If `npm publish` returns E403 with "You may not perform that action with these credentials", verify the token's package scope. If it says "Two-factor authentication or granular access token with bypass 2fa enabled is required", recreate the token with Bypass 2FA enabled. If it says `E_STAGE_REQUIRED`, use staged publishing. The follow-up `npm view` 404 is a consequence of a failed direct publish, not a second failure.
 - [ ] Record the exact published tarball shasum/integrity from `npm publish` output and reconcile it with `npm view proofpack-cli@<version> dist.integrity`.
 - [ ] Tag the release after merge; enable provenance only where the runtime supports it.
 - [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; a private repository release is not a public distribution.
@@ -61,6 +62,8 @@ security delete-generic-password -a 2648782102h -s proofpack-cli-npm-token
 ```
 
 Do not run this deletion before publication unless the token is no longer needed.
+
+`scripts/publish.sh` defaults to direct publishing. Set `PUBLISH_MODE=stage` for npm's staged flow; the script still runs all local checks, stages the package, and prints the staged-version list. Approval is intentionally a human 2FA action and is not performed by the script.
 
 If the stored token was ever displayed in a local diagnostic dialog, revoke it at [npm token settings](https://www.npmjs.com/settings/2648782102h/tokens), generate a replacement with the package scope above, and run `scripts/setup-npm-token.sh` again. Do not paste token values into chat, shell history, `.npmrc`, or repository files.
 
