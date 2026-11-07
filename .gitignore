@@ -1,0 +1,5 @@
+node_modules/
+dist/
+coverage/
+.proofpack/
+.DS_Store

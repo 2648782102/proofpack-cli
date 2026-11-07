@@ -1,0 +1,26 @@
+name: Bug report
+description: Report incorrect or confusing behavior
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Proofpack and Node.js versions
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed secrets and private source content from this report.
+          required: true

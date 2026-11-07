@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a focused improvement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: How do you handle it today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Smallest useful outcome
+    validations:
+      required: true
