@@ -1,10 +1,35 @@
 #!/bin/sh
 set -eu
 
+NPM_KEYCHAIN_SERVICE="proofpack-cli-npm-token"
+NPM_KEYCHAIN_ACCOUNT="2648782102h"
+
 if [ -z "${NPM_TOKEN:-}" ]; then
-  echo "NPM_TOKEN is required for noninteractive publishing." >&2
-  echo "Create a granular npm token with publish permission and bypass 2FA." >&2
-  exit 2
+  if [ "$(uname -s)" = "Darwin" ] && security find-generic-password \
+    -a "$NPM_KEYCHAIN_ACCOUNT" \
+    -s "$NPM_KEYCHAIN_SERVICE" \
+    -w >/dev/null 2>&1; then
+    NPM_TOKEN="$(security find-generic-password \
+      -a "$NPM_KEYCHAIN_ACCOUNT" \
+      -s "$NPM_KEYCHAIN_SERVICE" \
+      -w)"
+    export NPM_TOKEN
+  else
+    echo "NPM_TOKEN is required for noninteractive publishing." >&2
+    echo "Run scripts/setup-npm-token.sh or export a granular token with publish permission and bypass 2FA." >&2
+    exit 2
+  fi
+fi
+
+case "$NPM_TOKEN" in
+  *'
+'*) echo "NPM_TOKEN must be a single-line value." >&2; exit 2 ;;
+esac
+
+if [ "${PROVENANCE:-0}" = "1" ]; then
+  PROVENANCE_ARGS="--provenance"
+else
+  PROVENANCE_ARGS=""
 fi
 
 package_version=$(node -p 'require("./package.json").version')
@@ -26,8 +51,8 @@ npm pack --dry-run
 
 NPM_CONFIG_USERCONFIG="$(mktemp)" || exit 2
 export NPM_CONFIG_USERCONFIG
-trap 'rm -f "$NPM_CONFIG_USERCONFIG"' EXIT HUP INT TERM
+trap 'rm -f "$NPM_CONFIG_USERCONFIG"; unset NPM_TOKEN' EXIT HUP INT TERM
 printf '//registry.npmjs.org/:_authToken=%s\n' "$NPM_TOKEN" > "$NPM_CONFIG_USERCONFIG"
 
-npm publish --access public --provenance
+npm publish --access public $PROVENANCE_ARGS
 npm view "proofpack-cli@$package_version" version dist.integrity

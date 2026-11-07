@@ -40,12 +40,26 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Verify macOS (`open`), Linux (`xdg-open`), and Windows (`cmd start`) opener behavior where available.
 - [ ] Verify Unix and Windows shell/process-tree cancellation behavior where available.
 - [ ] Log in to npm (`npm login`) and confirm a publish-capable credential. npm currently requires 2FA or a granular access token with bypass 2FA for direct publishing; `npm publish --otp <code>` may work after enabling 2FA.
-- [ ] For automation, create a granular access token with publish permission and bypass 2FA, then expose it as `NPM_TOKEN` only for the publish command. Do not commit tokens to `.npmrc`.
+- [ ] Create a granular access token with publish permission and bypass 2FA. On macOS, run `scripts/setup-npm-token.sh` to store it in Keychain with hidden input; `scripts/publish.sh` reads it without putting the token in shell history, `.npmrc`, or the repository.
+- [ ] Alternatively, expose the token as `NPM_TOKEN` only for the publish command. In `zsh`, use `read -rs NPM_TOKEN; export NPM_TOKEN` so the value is hidden and not saved in history; do not put the literal token in a command line or committed file.
+- [ ] Use `PROVENANCE=1 scripts/publish.sh` only from an environment with npm provenance support, such as GitHub Actions OIDC. Local publishing defaults to plain `npm publish`; provenance is optional and not required for the first release.
 - [ ] If the registry still returns E403, stop and resolve the account policy before retrying; do not repeatedly republish.
 - [ ] Record the exact published tarball shasum/integrity from `npm publish` output and reconcile it with `npm view proofpack-cli@<version> dist.integrity`.
-- [ ] Tag the release after merge; prefer provenance-enabled publishing where the npm account supports it.
+- [ ] Tag the release after merge; enable provenance only where the runtime supports it.
 - [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; a private repository release is not a public distribution.
 - [ ] Record the published version and tarball integrity in the release notes.
+
+## Local token setup
+
+`scripts/setup-npm-token.sh` stores the npm token under the macOS Keychain service `proofpack-cli-npm-token` for account `2648782102h`. It uses a hidden macOS dialog and `security add-generic-password -U -X`, so the token is not echoed, written to shell history, placed on an interactive command line, or added to `.npmrc`. `scripts/publish.sh` prefers an existing `NPM_TOKEN` environment variable; otherwise it reads the Keychain entry and writes a temporary npm userconfig that is deleted on exit.
+
+To remove the stored credential later:
+
+```sh
+security delete-generic-password -a 2648782102h -s proofpack-cli-npm-token
+```
+
+Do not run this deletion before publication unless the token is no longer needed.
 
 ## Rollback
 

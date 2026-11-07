@@ -31,6 +31,8 @@ Status: GitHub tag pushed; npm publication pending an authorized publish credent
 
 ## Publication
 
-Direct `npm publish` was blocked by npm's account policy: two-factor authentication or a granular access token with bypass 2FA is required. After an authorized credential is available, run `NPM_TOKEN=<token> scripts/publish.sh`, then verify `npm view proofpack-cli@0.2.0 version dist.integrity`.
+Direct `npm publish` was blocked by npm's account policy: two-factor authentication or a granular access token with bypass 2FA is required. After an authorized credential is available, run `scripts/setup-npm-token.sh` on macOS, then `scripts/publish.sh`; alternatively set `NPM_TOKEN` for that one command. Verify with `npm view proofpack-cli@0.2.0 version dist.integrity`.
+
+`scripts/publish.sh` publishes locally without provenance by default. Set `PROVENANCE=1` only from an environment that supports npm provenance, such as GitHub Actions OIDC.
 
 For the GitHub Release UI, use the existing `v0.2.0` tag and these notes. Do not create a second tag.
