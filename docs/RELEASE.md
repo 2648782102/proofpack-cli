@@ -52,7 +52,7 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 
 ## Local token setup
 
-`scripts/setup-npm-token.sh` stores the npm token under the macOS Keychain service `proofpack-cli-npm-token` for account `2648782102h`. It uses a hidden macOS dialog and `security add-generic-password -U -X`, so the token is not echoed, written to shell history, placed on an interactive command line, or added to `.npmrc`. `scripts/publish.sh` prefers an existing `NPM_TOKEN` environment variable; otherwise it reads the Keychain entry and writes a temporary npm userconfig that is deleted on exit.
+`scripts/setup-npm-token.sh` stores the npm token under the macOS Keychain service `proofpack-cli-npm-token` for account `2648782102h`. It opens a hidden macOS dialog and does not require an interactive shell, then uses `security add-generic-password -U -X`, so the token is not echoed, written to shell history, placed on an interactive command line, or added to `.npmrc`. `scripts/publish.sh` prefers an existing `NPM_TOKEN` environment variable; otherwise it reads the Keychain entry and writes a temporary npm userconfig that is deleted on exit.
 
 To remove the stored credential later:
 
