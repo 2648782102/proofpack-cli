@@ -39,9 +39,12 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 
 - [ ] Verify macOS (`open`), Linux (`xdg-open`), and Windows (`cmd start`) opener behavior where available.
 - [ ] Verify Unix and Windows shell/process-tree cancellation behavior where available.
-- [ ] Log in to npm (`npm login`) or confirm an authorized publish token; the current machine was not logged in at release-check time.
+- [ ] Log in to npm (`npm login`) and confirm a publish-capable credential. npm currently requires 2FA or a granular access token with bypass 2FA for direct publishing; `npm publish --otp <code>` may work after enabling 2FA.
+- [ ] For automation, create a granular access token with publish permission and bypass 2FA, then expose it as `NPM_TOKEN` only for the publish command. Do not commit tokens to `.npmrc`.
+- [ ] If the registry still returns E403, stop and resolve the account policy before retrying; do not repeatedly republish.
+- [ ] Record the exact published tarball shasum/integrity from `npm publish` output and reconcile it with `npm view proofpack-cli@<version> dist.integrity`.
 - [ ] Tag the release after merge; prefer provenance-enabled publishing where the npm account supports it.
-- [ ] Create a GitHub release with concise, factual notes and no unverified safety claims.
+- [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; a private repository release is not a public distribution.
 - [ ] Record the published version and tarball integrity in the release notes.
 
 ## Rollback

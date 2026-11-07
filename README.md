@@ -73,6 +73,7 @@ npm run build
 - [Roadmap](docs/ROADMAP.md)
 - [Development handoff](docs/DEVELOPMENT.md)
 - [Release checklist](docs/RELEASE.md)
+- [Changelog](CHANGELOG.md)
 - [Decisions](docs/decisions/)
 
 ## License
