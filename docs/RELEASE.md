@@ -9,7 +9,7 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Run `npm run check`.
 - [ ] Run `npm test`.
 - [ ] Run `npm run build`.
-- [ ] Run `npm pack --dry-run` and confirm the tarball contains only `dist`, `README.md`, `LICENSE`, `docs/RELEASE.md`, and `package.json`.
+- [ ] Run `npm pack --dry-run` and confirm the tarball contains only `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs/RELEASE.md`, and `package.json`.
 - [ ] Smoke-test `node dist/cli.js --help` and `node dist/cli.js --version`.
 - [ ] Smoke-test `node dist/cli.js check` in a temporary Git repository.
 - [ ] Smoke-test one explicit `--run` command with JSON output.
@@ -30,6 +30,7 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Explicit `--run` commands are previewed and never discovered automatically.
 - [ ] Command output caps, truncation markers, and best-effort redaction are tested.
 - [ ] `--share-safe` omits branch, HEAD, base commit, paths, output paths, command text, and output from both Markdown and JSON.
+- [ ] Confirm share-safe stdout, stderr, and written reports contain no command text or command output.
 - [ ] `--open` is opt-in, requires a written Markdown report, and does not auto-open by default.
 - [ ] `--base` uses `--end-of-options`, resolves a commit, and excludes untracked files from that view.
 - [ ] Reports never claim correctness, security, or readiness to merge.
@@ -38,6 +39,7 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 
 - [ ] Verify macOS (`open`), Linux (`xdg-open`), and Windows (`cmd start`) opener behavior where available.
 - [ ] Verify Unix and Windows shell/process-tree cancellation behavior where available.
+- [ ] Log in to npm (`npm login`) or confirm an authorized publish token; the current machine was not logged in at release-check time.
 - [ ] Tag the release after merge; prefer provenance-enabled publishing where the npm account supports it.
 - [ ] Create a GitHub release with concise, factual notes and no unverified safety claims.
 - [ ] Record the published version and tarball integrity in the release notes.

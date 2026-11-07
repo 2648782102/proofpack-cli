@@ -206,8 +206,14 @@ test("share-safe omits paths and command output from a written report", () => {
   assert.equal(result.status, 0);
   const report = readFileSync(path.join(directory, ".proofpack", "share.md"), "utf8");
   assert.equal(report.includes("secret output marker"), false);
+  assert.equal(report.includes("secret output marker"), false);
+  assert.equal(report.includes("node -e"), false);
+  assert.equal(report.includes(".proofpack/share.md"), false);
   assert.equal(report.includes("Share-safe: yes"), true);
   assert.equal(report.includes(".proofpack/share.md"), false);
+  assert.match(result.stderr, /\[OMITTED\]/);
+  assert.equal(result.stderr.includes("secret output marker"), false);
+  assert.equal(result.stderr.includes("node -e"), false);
 });
 
 test("output validation rejects tracked files, outside paths, and symlink traversal", () => {

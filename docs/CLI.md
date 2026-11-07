@@ -36,7 +36,7 @@ Deferred: `init`, automatic check discovery, AI review, sandboxing, and network 
 
 ### Command execution
 
-Each `--run` command is printed to stderr before execution. Commands run sequentially with stdin ignored. stdout/stderr are each capped at the configured output limit (32 KiB by default), sanitized for terminal control sequences, and redacted on a best-effort basis for common token/key formats, URLs with inline credentials, private key blocks, and the current home directory. Reports record observed byte counts, truncation, and replacement counts. Redaction is not a guarantee; review reports before sharing them.
+Each `--run` command is printed to stderr before execution; in `--share-safe` mode the preview shows `[OMITTED]` instead of command text. Commands run sequentially with stdin ignored. stdout/stderr are each capped at the configured output limit (32 KiB by default), sanitized for terminal control sequences, and redacted on a best-effort basis for common token/key formats, URLs with inline credentials, private key blocks, and the current home directory. Reports record observed byte counts, truncation, and replacement counts. Redaction is not a guarantee; review reports before sharing them.
 
 `SIGINT`/`SIGTERM` stop the active process tree; remaining commands are marked `not-run`. On Unix, Proofpack starts each command in its own process group and signals the group; on Windows it uses `taskkill /T`. Commands may still have side effects before termination.
 

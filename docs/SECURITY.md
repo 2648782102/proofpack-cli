@@ -14,6 +14,7 @@ Proofpack is local-first. Default inspection makes no network requests, sends no
 - Reject explicit output paths outside the repository, inside `.git`, through symbolic links, or over tracked files.
 - Resolve `--base` with `--end-of-options` and a pinned commit before diffing; base-mode untracked files are excluded.
 - Apply `--share-safe` omission to the evidence model before both renderers; review even share-safe reports before sharing.
+- In `--share-safe` mode, preview command text on stderr as `[OMITTED]` and omit command text/output from the written report.
 - Launch the system opener only with explicit `--open` plus a written Markdown report; no browser upload or network service is used by Proofpack.
 - Do not emit raw environment variables in reports.
 - Escape terminal control sequences and Markdown table/inline-code output.

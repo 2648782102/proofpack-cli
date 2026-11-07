@@ -5,7 +5,7 @@
   "type": "module",
   "engines": { "node": ">=24" },
   "bin": { "proofpack": "dist/cli.js" },
-  "files": ["dist", "README.md", "LICENSE", "docs/RELEASE.md"],
+  "files": ["dist", "README.md", "CHANGELOG.md", "LICENSE", "docs/RELEASE.md"],
   "keywords": ["git", "cli", "acceptance-report", "developer-tools", "local-first"],
   "repository": {
     "type": "git",

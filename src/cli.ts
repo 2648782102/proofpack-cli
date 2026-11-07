@@ -67,7 +67,9 @@ async function main(): Promise<number> {
       timeoutMs: args.timeoutSeconds * 1000,
       outputLimitBytes: args.outputLimitBytes,
       abortSignal: abortController.signal,
-      preview: (message) => process.stderr.write(`${message}\n`),
+      preview: args.shareSafe
+        ? (message) => process.stderr.write(message.replace(/check \d+\/\d+:.*$/, "check: [OMITTED]\n"))
+        : (message) => process.stderr.write(`${message}\n`),
     });
 
     const reportSnapshot = args.commands.length === 0
