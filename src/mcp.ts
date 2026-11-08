@@ -337,6 +337,9 @@ function eraFor(message: JsonRpcMessage): ProtocolEra {
 function dispatch(context: RequestContext): JsonRecord {
   const { message, era } = context;
   if (era === "modern") assertModernRequest(message);
+  if (era === "legacy" && hasEnvelopeClaim(message)) {
+    throw new InvalidRequestError("Modern `_meta` requests are not valid on a legacy MCP connection.");
+  }
 
   switch (message.method) {
     case "initialize":

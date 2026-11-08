@@ -95,6 +95,7 @@ test("legacy initialization, tool listing, share-safe call, and ping work", () =
     request(2, "tools/list"),
     request(3, "tools/call", { name: "proofpack_check", arguments: { cwd: directory, shareSafe: true } }),
     request(4, "ping"),
+    request(5, "tools/list", { _meta: modernMeta() }),
   ], directory) as Array<Record<string, any>>;
 
   assert.equal(responses[0]?.result?.protocolVersion, "2025-11-25");
@@ -106,6 +107,8 @@ test("legacy initialization, tool listing, share-safe call, and ping work", () =
   assert.equal(reportText.includes("tracked.txt"), false);
   assert.equal(responses[2]?.result?.resultType, undefined);
   assert.deepEqual(responses[3]?.result, {});
+  assert.equal(responses[4]?.error?.code, -32600);
+  assert.match(responses[4]?.error?.message, /legacy MCP connection/);
 });
 
 test("unsupported modern versions and invalid tool arguments return protocol errors", () => {

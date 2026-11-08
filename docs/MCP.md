@@ -82,7 +82,7 @@ For a published package that exposes `proofpack-mcp`:
   "mcpServers": {
     "proofpack": {
       "command": "npx",
-      "args": ["-y", "proofpack-cli@<version>", "proofpack-mcp"]
+      "args": ["-y", "--package=proofpack-cli@<version>", "proofpack-mcp"]
     }
   }
 }
