@@ -2,7 +2,7 @@
 
 Tag: `v0.3.1`
 
-Status: Release preparation. npm publication, Git tag, and GitHub Release are pending.
+Status: Published to npm on 2026-11-08 via staged publishing with security-key approval. The Git tag and GitHub Release are created from the final commit.
 
 ## Change
 
@@ -19,7 +19,8 @@ Status: Release preparation. npm publication, Git tag, and GitHub Release are pe
 
 - `npm run check`, `npm test`, `npm run build`, and `npm pack --dry-run`.
 - CI smoke tests `node dist/cli.js --version` and `node dist/mcp.js < /dev/null` after the build.
-- Published package smoke tests after approval: both `proofpack` and `proofpack-mcp` through explicit `npx --package` invocations, plus a legacy MCP `initialize` response.
+- GitHub Actions succeeded for the release-preparation commit on `main`.
+- Published package smoke tests: `npx -y --package=proofpack-cli@0.3.1 proofpack --version`, `proofpack check --help`, a `proofpack-mcp` stdio EOF check, and a legacy MCP `initialize` response reporting server version `0.3.1`.
 
 ## Boundaries
 
@@ -30,9 +31,11 @@ Status: Release preparation. npm publication, Git tag, and GitHub Release are pe
 
 ## Publication
 
-The version is staged with `PUBLISH_MODE=stage scripts/publish.sh` and approved through npm's security-key flow. Exact tarball metadata will be recorded here after approval.
+The version was staged with `PUBLISH_MODE=stage scripts/publish.sh` and approved through npm's security-key flow with `npm stage approve`.
 
-- `dist.integrity`: pending
-- `dist.shasum`: pending
+Published tarball metadata:
+
+- `dist.integrity`: `sha512-NWZR+N2sdYNe1Gz7i0CFNFFZ3AKBZ77E+ta/GNuJgtxqLKwAokcVBWzKkddd519A64g635+U6Jm/aFJ/xTTu+g==`
+- `dist.shasum`: `3c09086cc5b1068cd6f9bee298d2c67f24b631fb`
 
 The package has no runtime dependencies. The CLI binary is `proofpack`; the MCP binary is `proofpack-mcp`.
