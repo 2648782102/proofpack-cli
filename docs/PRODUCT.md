@@ -37,7 +37,6 @@ Proofpack reports evidence, not correctness. A successful test is not proof that
 ## Later phases — planned
 
 - Add a reviewed `init` only if persisted per-repository defaults prove useful.
-- Publish an npm package after the release checklist and provenance review.
 - Import CI results or agent traces from documented formats.
 - Add a Conchbase adapter only after its public event contract stabilizes.
 

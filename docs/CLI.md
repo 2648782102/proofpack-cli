@@ -1,6 +1,6 @@
 # CLI contract
 
-This document describes the implemented Phase 3 behavior and clearly marks deferred features. Avoid breaking implemented flags after the first published release.
+This document describes the implemented `0.2.0` CLI behavior and clearly marks deferred features. Avoid breaking implemented flags after the first published release.
 
 ## Commands
 

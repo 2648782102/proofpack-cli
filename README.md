@@ -4,7 +4,7 @@
 
 Proofpack helps an individual developer answer three questions after a coding task: what changed, what checks actually ran, and what remains unchecked. It records Git change facts, explicit command evidence, and heuristic review prompts; it does not claim that a change is correct.
 
-> Early development. Phase 3 preparation implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented.
+> Early development. Version `0.2.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented.
 
 ## Product principles
 
@@ -14,11 +14,22 @@ Proofpack helps an individual developer answer three questions after a coding ta
 - No project command runs unless the user explicitly supplies `--run`.
 - Git inspection is read-only; explicitly run commands use the user's shell and privileges without a sandbox.
 
-## First use
+## Install and first use
+
+Use npm without a global install:
 
 ```sh
-npx proofpack-cli check
+npx proofpack-cli@0.2.0 check
 ```
+
+Or install the package in a project:
+
+```sh
+npm install --save-dev proofpack-cli@0.2.0
+npx proofpack check
+```
+
+The published binary is named `proofpack`.
 
 This prints a Markdown report to stdout without changing the working tree, running project commands, or making network requests. To save it, pass an explicit path:
 

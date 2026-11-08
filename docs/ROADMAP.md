@@ -22,7 +22,7 @@
 ## Phase 3 — usable distribution (preparation implemented)
 
 - Add `--base`, `--share-safe`, opt-in `--open`, `0.3` reports, package metadata, and a release checklist.
-- Publish npm package after the release checklist, shell compatibility check, and provenance review; publication remains an explicit maintainer action.
+- Published `0.2.0` to npm through staged publishing with 2FA approval; future releases remain explicit maintainer actions.
 - Add a reviewed `init` only if persisted defaults are requested.
 - Measure first-run friction through opt-in feedback, without telemetry by default.
 
