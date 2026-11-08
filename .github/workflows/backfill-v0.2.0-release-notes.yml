@@ -1,0 +1,27 @@
+name: Backfill v0.2.0 release notes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/backfill-v0.2.0-release-notes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update existing v0.2.0 release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f docs/RELEASE_NOTES_v0.2.0.md
+          gh release view v0.2.0 >/dev/null
+          gh release edit v0.2.0 --title "Proofpack 0.2.0" --notes-file docs/RELEASE_NOTES_v0.2.0.md
