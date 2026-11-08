@@ -2,7 +2,7 @@
 
 ## First run
 
-The user runs `npx proofpack-cli check` in a Git repository. Proofpack inspects Git metadata and diff statistics, runs no checks, and prints a Markdown report to stdout. Only `--output <path>` writes a file; it prints a short summary and destination paths to stderr. If the directory is not a Git repository, the CLI explains the error and suggests a next action. If there are no changes, the report states that fact and still records that no checks ran.
+The user runs `npx -y --package=proofpack-cli@0.3.0 proofpack check` in a Git repository, or `npx proofpack check` after installing the package locally. Because the published package exposes two binaries, one-command `npx` usage must name the `proofpack` binary explicitly. Proofpack inspects Git metadata and diff statistics, runs no checks, and prints a Markdown report to stdout. Only `--output <path>` writes a file; it prints a short summary and destination paths to stderr. If the directory is not a Git repository, the CLI explains the error and suggests a next action. If there are no changes, the report states that fact and still records that no checks ran.
 
 ## Explicit checks
 

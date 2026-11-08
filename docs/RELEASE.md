@@ -70,7 +70,7 @@ Do not run this deletion before publication unless the token is no longer needed
 
 `scripts/publish.sh` defaults to direct publishing. Set `PUBLISH_MODE=stage` for npm's staged flow; the script still runs all local checks, stages the package, and prints the staged-version list. Approval is intentionally a human 2FA action and is not performed by the script.
 
-After approval, verify with `npm view proofpack-cli@<version> version dist.integrity dist.shasum`, then smoke-test `npx proofpack-cli@<version> --version`. Do not restage or republish an already approved version.
+After approval, verify with `npm view proofpack-cli@<version> version dist.integrity dist.shasum`, then smoke-test both binaries from a clean temporary install. Because `0.3.0` exposes two binaries, use `npx -y --package=proofpack-cli@<version> proofpack --version` and `npx -y --package=proofpack-cli@<version> proofpack-mcp < /dev/null`; `npx proofpack-cli@<version> --version` cannot infer an executable. Do not restage or republish an already approved version.
 
 If the stored token was ever displayed in a local diagnostic dialog, revoke it at [npm token settings](https://www.npmjs.com/settings/2648782102h/tokens), generate a replacement with the package scope above, and run `scripts/setup-npm-token.sh` again. Do not paste token values into chat, shell history, `.npmrc`, or repository files.
 

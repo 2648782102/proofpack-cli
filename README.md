@@ -42,7 +42,7 @@ The host then sees one read-only `proofpack_check` tool. It generates a Markdown
 Use npm without a global install:
 
 ```sh
-npx proofpack-cli@0.3.0 check
+npx -y --package=proofpack-cli@0.3.0 proofpack check
 ```
 
 Or install the package in a project:
@@ -57,15 +57,15 @@ The CLI binary is named `proofpack`; the MCP binary is named `proofpack-mcp`.
 This prints a Markdown report to stdout without changing the working tree, running project commands, or making network requests. To save it, pass an explicit path:
 
 ```sh
-npx proofpack-cli check --output .proofpack/review.md
+npx -y --package=proofpack-cli@0.3.0 proofpack check --output .proofpack/review.md
 ```
 
 ## Explicit checks
 
 ```sh
-npx proofpack-cli check --run "npm test" --run "npm run lint"
-npx proofpack-cli check --run "npm test" --format json
-npx proofpack-cli check --run "npm test" --format markdown,json --output .proofpack/review.md
+npx -y --package=proofpack-cli@0.3.0 proofpack check --run "npm test" --run "npm run lint"
+npx -y --package=proofpack-cli@0.3.0 proofpack check --run "npm test" --format json
+npx -y --package=proofpack-cli@0.3.0 proofpack check --run "npm test" --format markdown,json --output .proofpack/review.md
 ```
 
 Each command is previewed before execution, run sequentially from the repository root through the user's shell, and recorded with timing, exit status, bounded stdout/stderr, truncation, and best-effort redaction. `--timeout <seconds>` defaults to 120 and applies per command. Multiple formats require `--output` and write sibling `.md` / `.json` files.
@@ -75,9 +75,9 @@ Commands are not sandboxed and can modify the working tree. Review every command
 ## Branch/base and sharing
 
 ```sh
-npx proofpack-cli check --base main
-npx proofpack-cli check --run "npm test" --share-safe --output .proofpack/share.md
-npx proofpack-cli check --output .proofpack/review.md --open
+npx -y --package=proofpack-cli@0.3.0 proofpack check --base main
+npx -y --package=proofpack-cli@0.3.0 proofpack check --run "npm test" --share-safe --output .proofpack/share.md
+npx -y --package=proofpack-cli@0.3.0 proofpack check --output .proofpack/review.md --open
 ```
 
 `--base` compares committed, staged, and working-tree changes against a resolved Git ref and excludes untracked files from that view. `--share-safe` omits branch, HEAD, base commit, file paths, output destination, command text, command output, and prompt evidence from both Markdown and JSON; status, counts, timings, and limitations remain. `--open` is opt-in, requires a written Markdown report, and uses the system opener. It never uploads the report.
