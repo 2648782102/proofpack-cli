@@ -1,8 +1,8 @@
-# Proofpack 0.2.0 release notes draft
+# Proofpack 0.2.0 release notes
 
 Tag: `v0.2.0`
 
-Status: GitHub tag pushed; npm publication pending an authorized publish credential.
+Status: Published to npm on 2026-11-08 via staged publishing with 2FA approval.
 
 ## Highlights
 
@@ -20,6 +20,7 @@ Status: GitHub tag pushed; npm publication pending an authorized publish credent
 - Clean checkout install/build/test smoke.
 - Local tarball CLI smoke for `--version`, default check, explicit check, `--base`, and share-safe report.
 - GitHub Actions succeeded for `main` and `v0.2.0`.
+- Published package smoke test: `npx proofpack-cli@0.2.0 --version` and `check --help`.
 
 ## Boundaries
 
@@ -31,10 +32,11 @@ Status: GitHub tag pushed; npm publication pending an authorized publish credent
 
 ## Publication
 
-Direct `npm publish` was blocked by npm's account policy: two-factor authentication or a granular access token with bypass 2FA is required. After an authorized credential is available, run `scripts/setup-npm-token.sh` on macOS, then `scripts/publish.sh`; alternatively set `NPM_TOKEN` for that one command. Verify with `npm view proofpack-cli@0.2.0 version dist.integrity`.
+Direct `npm publish` was blocked by npm's current account policy: a granular access token with bypass 2FA can stage a package but cannot directly publish a package that does not yet exist. The release was staged with `PUBLISH_MODE=stage scripts/publish.sh` and approved with 2FA using `npm stage approve`.
 
-The first publish attempt with a granular token failed with E403 because the token was limited to `@2648782102h`, while `proofpack-cli` is unscoped. A replacement token with correct package scope still failed because its Bypass 2FA option was not enabled. A third token with correct scope and bypass 2FA was accepted for authentication, but npm restricted it to staged publishing and returned `E_STAGE_REQUIRED` for a package that does not yet exist. Use `PUBLISH_MODE=stage scripts/publish.sh` and approve the staged `0.2.0` with 2FA on npmjs.com. No live package version was created.
+Published tarball metadata:
 
-`scripts/publish.sh` publishes locally without provenance by default. Set `PROVENANCE=1` only from an environment that supports npm provenance, such as GitHub Actions OIDC.
+- `dist.integrity`: `sha512-QQE6gm7aiEt3nwohp9GDI33sWI1V430Re0TJS9htO1j9FICJEfaOYMR4PU+j1P5H2Ck+ed8kij+zbicsC8ROMg==`
+- `dist.shasum`: `b9be0399f8b6ea8604efb09ad41807c2ede0a88e`
 
-For the GitHub Release UI, use the existing `v0.2.0` tag and these notes. Do not create a second tag.
+The package has no runtime dependencies. `npx proofpack-cli@0.2.0 check --help` resolves the `proofpack` binary. GitHub Release notes use the existing `v0.2.0` tag; no second tag is created.
