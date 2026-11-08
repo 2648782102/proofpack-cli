@@ -68,7 +68,7 @@ test("modern discovery, tool listing, and read-only report call work", () => {
   assert.equal(responses[0]?.result?.resultType, "complete");
   assert.deepEqual(responses[0]?.result?.supportedVersions, [MODERN_VERSION]);
   assert.equal(responses[0]?.result?._meta?.["io.modelcontextprotocol/serverInfo"]?.name, "proofpack-mcp");
-  assert.equal(responses[0]?.result?._meta?.["io.modelcontextprotocol/serverInfo"]?.version, "0.3.1");
+  assert.equal(responses[0]?.result?._meta?.["io.modelcontextprotocol/serverInfo"]?.version, "0.3.2");
   assert.equal(responses[0]?.result?.ttlMs, 3600000);
   assert.equal(responses[0]?.result?.cacheScope, "public");
   assert.equal(responses[1]?.result?.resultType, "complete");

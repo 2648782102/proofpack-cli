@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.2648782102/proofpack",
+  "title": "Proofpack",
+  "description": "Local, read-only acceptance reports for AI-assisted Git changes, exposed as one MCP tool.",
+  "repository": {
+    "url": "https://github.com/2648782102/proofpack-cli",
+    "source": "github"
+  },
+  "version": "0.3.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "proofpack-cli",
+      "version": "0.3.2",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

@@ -10,6 +10,9 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Run `npm test`.
 - [ ] Run `npm run build`.
 - [ ] Run `npm pack --dry-run` and confirm the tarball contains only `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs/RELEASE.md`, `docs/MCP.md`, and `package.json`.
+- [ ] Confirm `mcpName` in `package.json` matches `name` in `server.json`.
+- [ ] Confirm `version` in `package.json`, `src/version.ts`, `server.json`, and the release notes match.
+- [ ] Run `mcp-publisher validate server.json` if the publisher CLI is installed.
 - [ ] Smoke-test `node dist/cli.js --help` and `node dist/cli.js --version`.
 - [ ] Smoke-test `node dist/mcp.js < /dev/null` and confirm stdout is empty.
 - [ ] Confirm both `proofpack` and `proofpack-mcp` binaries are present in `package.json` and the built tarball.
@@ -71,6 +74,10 @@ Do not run this deletion before publication unless the token is no longer needed
 `scripts/publish.sh` defaults to direct publishing. Set `PUBLISH_MODE=stage` for npm's staged flow; the script still runs all local checks, stages the package, and prints the staged-version list. Approval is intentionally a human 2FA action and is not performed by the script.
 
 After approval, verify with `npm view proofpack-cli@<version> version dist.integrity dist.shasum`, then smoke-test both binaries from a clean temporary install. Because `0.3.0` and later expose two binaries, use `npx -y --package=proofpack-cli@<version> proofpack --version` and `npx -y --package=proofpack-cli@<version> proofpack-mcp < /dev/null`; `npx proofpack-cli@<version> --version` cannot infer an executable. Do not restage or republish an already approved version.
+
+## MCP Registry
+
+The MCP Registry hosts metadata, not the npm artifact. Publish `proofpack-cli@<version>` to npm first, confirm the live package includes `mcpName`, then run `mcp-publisher login github` and `mcp-publisher publish` from this repository. Do not open a pull request against `modelcontextprotocol/registry` to add a server. See [distribution plan](DISTRIBUTION.md).
 
 If the stored token was ever displayed in a local diagnostic dialog, revoke it at [npm token settings](https://www.npmjs.com/settings/2648782102h/tokens), generate a replacement with the package scope above, and run `scripts/setup-npm-token.sh` again. Do not paste token values into chat, shell history, `.npmrc`, or repository files.
 

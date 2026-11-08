@@ -2,6 +2,22 @@
 
 All notable changes to Proofpack are documented here. This project is early-stage; report schema versions are independent of npm package versions.
 
+## [0.3.2] - 2026-11-09
+
+### Distribution
+
+- Add MCP Registry ownership metadata (`mcpName`) and a matching `server.json` for a local stdio npm package.
+- Refresh the README first screen with a one-command example, report preview, and explicit non-goals.
+- Add a reproducible demo script, social preview, distribution plan, directory entry, Show HN draft, and Chinese community post draft.
+- Expand package keywords and include `server.json` in the npm tarball.
+
+### Notes
+
+- Runtime behavior, CLI flags, MCP protocol contract, and report schema are unchanged from `0.3.1`.
+- npm publication and MCP Registry publication remain explicit maintainer actions.
+
+[0.3.2]: https://github.com/2648782102/proofpack-cli/releases/tag/v0.3.2
+
 ## [0.3.1] - 2026-11-08
 
 ### Fixed

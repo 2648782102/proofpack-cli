@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Proofpack Markdown report example">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101827"/>
+      <stop offset="1" stop-color="#18263b"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#050b16" flood-opacity="0.45"/>
+    </filter>
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .muted { fill: #91a1b8; }
+      .text { fill: #e7edf6; }
+      .green { fill: #77e0b5; }
+      .amber { fill: #ffd18a; }
+    </style>
+  </defs>
+  <rect width="1200" height="640" rx="0" fill="url(#bg)"/>
+  <rect x="72" y="64" width="1056" height="512" rx="18" fill="#111d2e" stroke="#344760" filter="url(#shadow)"/>
+  <rect x="72" y="64" width="1056" height="56" rx="18" fill="#18263a"/>
+  <rect x="72" y="102" width="1056" height="18" fill="#18263a"/>
+  <circle cx="106" cy="92" r="7" fill="#ff786b"/>
+  <circle cx="130" cy="92" r="7" fill="#ffd166"/>
+  <circle cx="154" cy="92" r="7" fill="#7bd88f"/>
+  <text x="190" y="98" class="mono muted" font-size="16">proofpack check --run "npm test"</text>
+  <text x="124" y="166" class="sans text" font-size="30" font-weight="700"># Proofpack acceptance report</text>
+  <text x="124" y="202" class="mono muted" font-size="15">Schema 0.3 · Markdown · local tool result</text>
+  <line x1="124" y1="230" x2="1076" y2="230" stroke="#2b3d55"/>
+  <text x="124" y="272" class="sans text" font-size="20" font-weight="600">## Change</text>
+  <text x="124" y="304" class="mono muted" font-size="16">Git-visible files: 2 · 18 insertions · 2 deletions</text>
+  <text x="124" y="332" class="mono muted" font-size="16">src/feature.ts modified · tests/feature.test.ts added</text>
+  <text x="124" y="386" class="sans text" font-size="20" font-weight="600">## Checks</text>
+  <rect x="124" y="406" width="440" height="40" rx="8" fill="#173b32" stroke="#2e8065"/>
+  <text x="142" y="432" class="mono green" font-size="16">npm test · passed · exit 0</text>
+  <text x="124" y="476" class="mono muted" font-size="15">Observed outcomes: 1 passed · 0 failed · 0 not run</text>
+  <rect x="720" y="272" width="356" height="218" rx="12" fill="#151f2d" stroke="#344760"/>
+  <text x="746" y="306" class="sans amber" font-size="18" font-weight="600">## Not checked</text>
+  <text x="746" y="342" class="mono muted" font-size="14">Lint and build were not run.</text>
+  <text x="746" y="370" class="mono muted" font-size="14">No correctness verdict.</text>
+  <text x="746" y="398" class="mono muted" font-size="14">No upload or telemetry.</text>
+  <text x="746" y="440" class="mono muted" font-size="14">Review prompts:</text>
+  <text x="746" y="466" class="mono muted" font-size="14">PP-DEP-001 · package.json</text>
+</svg>

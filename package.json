@@ -1,12 +1,13 @@
 {
   "name": "proofpack-cli",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Local acceptance reports for AI-assisted code changes",
   "type": "module",
   "engines": { "node": ">=24" },
+  "mcpName": "io.github.2648782102/proofpack",
   "bin": { "proofpack": "dist/cli.js", "proofpack-mcp": "dist/mcp.js" },
-  "files": ["dist", "README.md", "CHANGELOG.md", "LICENSE", "docs/RELEASE.md", "docs/MCP.md"],
-  "keywords": ["git", "cli", "mcp", "acceptance-report", "developer-tools", "local-first"],
+  "files": ["dist", "README.md", "CHANGELOG.md", "LICENSE", "server.json", "docs/RELEASE.md", "docs/MCP.md"],
+  "keywords": ["git", "cli", "mcp", "mcp-server", "acceptance-report", "developer-tools", "local-first", "ai-coding", "typescript", "nodejs"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2648782102/proofpack-cli.git"

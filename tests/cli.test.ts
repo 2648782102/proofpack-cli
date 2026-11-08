@@ -39,7 +39,7 @@ function makeRepository(): string {
 test("help and version work without a Git repository", () => {
   const directory = mkdtempSync(path.join(os.tmpdir(), "proofpack-help-test-"));
   assert.equal(runCli(["--help"], directory).status, 0);
-  assert.match(runCli(["--version"], directory).stdout, /^proofpack 0\.3\.1\n$/);
+  assert.match(runCli(["--version"], directory).stdout, /^proofpack 0\.3\.2\n$/);
 });
 
 test("MCP entrypoint exits on stdin EOF without writing to stdout", () => {
