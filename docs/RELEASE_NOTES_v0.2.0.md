@@ -28,7 +28,7 @@ Status: Published to npm on 2026-11-08 via staged publishing with 2FA approval.
 - Explicit commands are not sandboxed and may modify the working tree.
 - Passing checks are evidence of one invocation, not correctness or security.
 - Redaction and share-safe omission are best-effort; review reports before sharing.
-- The repository is private unless visibility is changed explicitly.
+- The repository is public as of 2026-11-08.
 
 ## Publication
 

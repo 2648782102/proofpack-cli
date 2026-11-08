@@ -6,6 +6,8 @@ Proofpack helps an individual developer answer three questions after a coding ta
 
 > Early development. Version `0.2.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented.
 
+Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-cli) · npm: [proofpack-cli](https://www.npmjs.com/package/proofpack-cli) · Release: [v0.2.0](https://github.com/2648782102/proofpack-cli/releases/tag/v0.2.0)
+
 ## Product principles
 
 - One command, one readable report.

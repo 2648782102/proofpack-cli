@@ -48,7 +48,7 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] If `npm publish` returns E403 with "You may not perform that action with these credentials", verify the token's package scope. If it says "Two-factor authentication or granular access token with bypass 2fa enabled is required", recreate the token with Bypass 2FA enabled. If it says `E_STAGE_REQUIRED`, use staged publishing. The follow-up `npm view` 404 is a consequence of a failed direct publish, not a second failure.
 - [ ] Record the exact published tarball shasum/integrity from `npm stage publish` or `npm publish` output and reconcile it with `npm view proofpack-cli@<version> dist.integrity`.
 - [ ] Tag the release after merge; enable provenance only where the runtime supports it.
-- [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; a private repository release is not a public distribution.
+- [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; verify repository visibility before treating the release as a public distribution.
 - [ ] Record the published version and tarball integrity in the release notes.
 
 ## Local token setup
