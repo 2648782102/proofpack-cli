@@ -40,4 +40,4 @@ Published tarball metadata:
 
 The package has no runtime dependencies. The CLI binary is `proofpack`; the MCP binary is `proofpack-mcp`.
 
-Because the package now exposes two binaries, a one-command `npx` invocation must name the executable explicitly, for example `npx -y --package=proofpack-cli@0.3.0 proofpack check`. After `npm install --save-dev proofpack-cli@0.3.0`, `npx proofpack check` works from the project. The older single-binary `npx proofpack-cli@0.2.0 ...` form does not select an executable for `0.3.0`.
+Because the package now exposes two binaries, a one-command `npx` invocation must name the executable explicitly, for example `npx -y --package=proofpack-cli@0.3.0 proofpack check`. After `npm install --save-dev proofpack-cli@0.3.0`, `npx proofpack check` works from the project. The older single-binary `npx proofpack-cli@0.2.0 ...` form does not select an executable for `0.3.0`. The `0.3.0` npm README predates these corrected examples; install `0.3.1` for the corrected package documentation.

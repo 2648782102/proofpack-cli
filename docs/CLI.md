@@ -1,6 +1,6 @@
 # CLI contract
 
-This document describes the implemented `0.3.0` CLI behavior and clearly marks deferred features. Avoid breaking implemented flags after the first published release. The MCP adapter has a separate contract in `docs/MCP.md` and does not change CLI flags or exit codes.
+This document describes the implemented `0.3.1` CLI behavior and clearly marks deferred features. Avoid breaking implemented flags after the first published release. The MCP adapter has a separate contract in `docs/MCP.md` and does not change CLI flags or exit codes.
 
 ## Commands
 

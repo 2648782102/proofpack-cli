@@ -2,6 +2,20 @@
 
 All notable changes to Proofpack are documented here. This project is early-stage; report schema versions are independent of npm package versions.
 
+## [0.3.1] - 2026-11-08
+
+### Fixed
+
+- Correct README, UX, MCP host examples, and installation snippets for a package with two binaries by naming `proofpack` or `proofpack-mcp` explicitly.
+- Add package-publication smoke checks for both binaries and document the two-binary `npx` behavior in the release checklist.
+
+### Notes
+
+- Runtime behavior, CLI flags, MCP protocol contract, and report schema are unchanged from `0.3.0`.
+- The published `0.3.0` tarball cannot be replaced; install `0.3.1` for the corrected package documentation.
+
+[0.3.1]: https://github.com/2648782102/proofpack-cli/releases/tag/v0.3.1
+
 ## [0.3.0] - 2026-11-08
 
 ### Added
