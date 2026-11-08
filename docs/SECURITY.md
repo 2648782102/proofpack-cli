@@ -4,6 +4,8 @@
 
 Proofpack is local-first. Default inspection makes no network requests, sends no telemetry, runs no user command, and reads only Git status and diff statistics. With explicit `--run`, Proofpack also captures bounded stdout/stderr, command text, timing, and exit outcomes. Reports may contain proprietary source paths, branch names, commands, and command output; users must review reports before sharing them.
 
+The unreleased MCP stdio adapter uses the same read-only inspection. It returns reports to the MCP host as tool results; it does not upload them, write them to disk, execute project commands, start a network listener, or invoke a model. The host controls the process working directory and may choose how to use returned content.
+
 ## Safe defaults
 
 - Git inspection only; Proofpack never stages, resets, or commits.
@@ -16,6 +18,10 @@ Proofpack is local-first. Default inspection makes no network requests, sends no
 - Apply `--share-safe` omission to the evidence model before both renderers; review even share-safe reports before sharing.
 - In `--share-safe` mode, preview command text on stderr as `[OMITTED]` and omit command text/output from the written report.
 - Launch the system opener only with explicit `--open` plus a written Markdown report; no browser upload or network service is used by Proofpack.
+- Keep stdout reserved for newline-delimited JSON-RPC in MCP mode; diagnostics stay off the protocol channel.
+- Reject MCP tool arguments that are not `cwd`, `base`, `format`, or `shareSafe`; validate `base` before Git resolution and reject `^{...}` syntax.
+- Pin an MCP stdio connection to the era established by its opening request; modern requests require a valid per-request `_meta` envelope.
+- Return Git inspection failures as MCP `isError` tool results with a concise reason; do not echo raw environment variables.
 - Do not emit raw environment variables in reports.
 - Escape terminal control sequences and Markdown table/inline-code output.
 - Constrain Git diff inspection with `--no-ext-diff`, `--no-textconv`, and `--no-renames`; invoke Git with argument arrays and `GIT_OPTIONAL_LOCKS=0`.
@@ -31,6 +37,8 @@ On timeout or `SIGINT`/`SIGTERM`, Proofpack signals the child process tree and m
 ## Threats and limitations
 
 Repository filenames, Git metadata, refs, command text, and command output may be malicious. They are treated as data, never instructions. Git is not a sandbox: repository-controlled configuration can still influence Git's behavior. Redaction and share-safe omission are heuristic and incomplete; absence of a replacement does not imply absence of a secret, and aggregate metadata may remain sensitive.
+
+An MCP `cwd` argument is a path input, not an isolation boundary. A tool annotated `readOnlyHint: true` is still subject to the host's trust policy; clients must not treat annotations from untrusted servers as guarantees. The adapter is stateless apart from the per-connection protocol era and does not keep report content between calls.
 
 Review prompts are deterministic path/stat heuristics, not vulnerability findings. Absence of a prompt does not imply absence of a vulnerability. A passing check proves only that one command exited zero in one invocation; it does not establish correctness, security, or readiness to merge.
 

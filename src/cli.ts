@@ -9,8 +9,7 @@ import { OpenError, openReport } from "./open.js";
 import { OutputError, resolveReportOutputFiles } from "./output.js";
 import { buildReport } from "./report.js";
 import { buildReviewPrompts } from "./rules.js";
-
-const VERSION = "0.2.0";
+import { PROOFPACK_VERSION } from "./version.js";
 
 interface ExitDecision {
   hadCheckFailure: boolean;
@@ -48,7 +47,7 @@ async function main(): Promise<number> {
       return 0;
     }
     if (args.kind === "version") {
-      process.stdout.write(`proofpack ${VERSION}\n`);
+      process.stdout.write(`proofpack ${PROOFPACK_VERSION}\n`);
       return 0;
     }
 

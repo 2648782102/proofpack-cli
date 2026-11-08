@@ -41,3 +41,7 @@ The JSON report uses the same `0.3` evidence model. Passing, failing, unrun, tim
 - Long command output remains bounded in both Markdown and JSON.
 - The CLI respects `NO_COLOR`, emits no color by default, and does not require a TTY.
 - HTML folding, a compact terminal dashboard, and an interactive `init` remain future work; Markdown is canonical.
+
+## MCP host
+
+An MCP host launches `proofpack-mcp` as a local subprocess and calls `proofpack_check`. The tool returns one Markdown report by default, or the versioned JSON report with `format: "json"`. No setup wizard, project command, output file, or system opener is involved. The host may supply `cwd`, `base`, and `shareSafe`; all other evidence limits remain visible in the report.

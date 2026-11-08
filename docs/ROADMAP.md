@@ -26,9 +26,17 @@
 - Add a reviewed `init` only if persisted defaults are requested.
 - Measure first-run friction through opt-in feedback, without telemetry by default.
 
+## Current source, unreleased — local MCP adapter
+
+- Extract a shared read-only report core.
+- Add a zero-dependency, dual-era MCP stdio server with one `proofpack_check` tool.
+- Document host configuration, protocol compatibility, security boundaries, and verification.
+- Publish the adapter in the next npm version; do not modify the already published `0.2.0`.
+
 ## Later, only if users ask
 
 - Import CI results or agent traces from documented formats.
 - GitHub PR summary adapter.
 - Conchbase event adapter after its event contract stabilizes.
+- Host-specific plugin packages only if a concrete host API requires one.
 - Sandboxed command execution as a separately designed feature.

@@ -42,6 +42,18 @@ test("help and version work without a Git repository", () => {
   assert.match(runCli(["--version"], directory).stdout, /^proofpack 0\.2\.0\n$/);
 });
 
+test("MCP entrypoint exits on stdin EOF without writing to stdout", () => {
+  const directory = mkdtempSync(path.join(os.tmpdir(), "proofpack-mcp-eof-"));
+  const result = spawnSync(
+    process.execPath,
+    ["--import", tsxLoader, path.join(projectRoot, "src", "mcp.ts")],
+    { cwd: directory, input: "", encoding: "utf8", env: process.env },
+  );
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout, "");
+  assert.equal(result.stderr, "");
+});
+
 test("argument errors use exit code 2", () => {
   const directory = mkdtempSync(path.join(os.tmpdir(), "proofpack-args-test-"));
   const result = runCli(["check", "--compare", "main"], directory);

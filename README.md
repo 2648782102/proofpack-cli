@@ -4,7 +4,7 @@
 
 Proofpack helps an individual developer answer three questions after a coding task: what changed, what checks actually ran, and what remains unchecked. It records Git change facts, explicit command evidence, and heuristic review prompts; it does not claim that a change is correct.
 
-> Early development. Version `0.2.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented.
+> Early development. Version `0.2.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented. The current source tree also contains an unreleased local MCP stdio adapter; see [MCP contract](docs/MCP.md).
 
 Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-cli) · npm: [proofpack-cli](https://www.npmjs.com/package/proofpack-cli) · Release: [v0.2.0](https://github.com/2648782102/proofpack-cli/releases/tag/v0.2.0)
 
@@ -15,6 +15,10 @@ Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-c
 - Observed facts, heuristic prompts, and unchecked work are separated.
 - No project command runs unless the user explicitly supplies `--run`.
 - Git inspection is read-only; explicitly run commands use the user's shell and privileges without a sandbox.
+
+## Current distribution shapes
+
+The published `0.2.0` package is a CLI only. The current source tree adds a separate `proofpack-mcp` stdio entrypoint that exposes the read-only report as an MCP tool; it is slated for the next package version and is not in `0.2.0`. MCP is a host-launched local subprocess, not a cloud service or a plugin. See [docs/MCP.md](docs/MCP.md) for the protocol contract and host configuration.
 
 ## Install and first use
 
@@ -80,6 +84,7 @@ npm run build
 - [Product requirements](docs/PRODUCT.md)
 - [User experience](docs/UX.md)
 - [CLI contract](docs/CLI.md)
+- [MCP contract](docs/MCP.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Security and privacy](docs/SECURITY.md)
 - [Open-source references](docs/REFERENCES.md)

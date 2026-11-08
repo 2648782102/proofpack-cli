@@ -9,6 +9,7 @@
 ## Commands
 
 - `npm run dev -- check` — run source CLI during development (from the project root).
+- `npm run dev:mcp` — run the source MCP stdio adapter during development.
 - `npm run check` — TypeScript validation.
 - `npm test` — Node test runner with TypeScript fixtures.
 - `npm run build` — compile to `dist/`.
@@ -30,9 +31,17 @@
 4. Tests cover paths with spaces, unusual filenames, deleted/renamed files, binary diffs, empty repos, no-change state, ignored files, argument errors, output errors, exit codes, passing/failing/timed-out commands, output caps, redaction, review rules, base refs, and share-safe reports.
 5. Sandboxed execution, repository-local `init`, automatic check discovery, and Conchbase integrations remain deferred.
 
+## MCP implementation
+
+1. `src/report-core.ts` owns read-only report generation; the CLI adds optional command evidence and output behavior on top.
+2. `src/mcp.ts` owns newline-delimited JSON-RPC framing, dual-era protocol compatibility, argument validation, and tool result shaping. stdout is reserved for protocol messages.
+3. The MCP tool never invokes `runChecks`, `resolveReportOutputFiles`, or `openReport`. Tests create temporary Git repositories and communicate with the entrypoint as a subprocess.
+4. Update `docs/MCP.md` when protocol versions, methods, tool schemas, or host configuration change.
+
 ## Release readiness
 
 - No network requests or telemetry in default or explicit-check paths.
+- MCP stdio remains local and emits no stdout outside JSON-RPC responses and errors.
 - No implicit execution of package scripts.
 - Exit codes documented and tested.
 - Reports label unrun checks, command outcomes, and heuristic prompts clearly.

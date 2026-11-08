@@ -9,8 +9,10 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Run `npm run check`.
 - [ ] Run `npm test`.
 - [ ] Run `npm run build`.
-- [ ] Run `npm pack --dry-run` and confirm the tarball contains only `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs/RELEASE.md`, and `package.json`.
+- [ ] Run `npm pack --dry-run` and confirm the tarball contains only `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs/RELEASE.md`, `docs/MCP.md`, and `package.json`.
 - [ ] Smoke-test `node dist/cli.js --help` and `node dist/cli.js --version`.
+- [ ] Smoke-test `node dist/mcp.js < /dev/null` and confirm stdout is empty.
+- [ ] Confirm both `proofpack` and `proofpack-mcp` binaries are present in `package.json` and the built tarball.
 - [ ] Smoke-test `node dist/cli.js check` in a temporary Git repository.
 - [ ] Smoke-test one explicit `--run` command with JSON output.
 - [ ] Smoke-test `--base <ref>`, `--share-safe`, and `--output` with Markdown/JSON reports.
@@ -33,6 +35,8 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Confirm share-safe stdout, stderr, and written reports contain no command text or command output.
 - [ ] `--open` is opt-in, requires a written Markdown report, and does not auto-open by default.
 - [ ] `--base` uses `--end-of-options`, resolves a commit, and excludes untracked files from that view.
+- [ ] MCP tests cover modern discovery/tool calls, legacy initialization/tool calls, share-safe output, Git errors as `isError` results, and malformed protocol input.
+- [ ] Confirm the MCP tool exposes no project command execution, file writing, opener, network, or model capability.
 - [ ] Reports never claim correctness, security, or readiness to merge.
 
 ## Distribution

@@ -7,6 +7,7 @@ export interface ReportOptions {
   formats: readonly ("markdown" | "json")[];
   generatedAt?: string;
   shareSafe?: boolean;
+  outputLabel?: string;
 }
 
 export interface ReportDocument {
@@ -131,7 +132,7 @@ export function buildReport(
       base: shareSafe || snapshot.base === null ? null : snapshot.base,
       untrackedIncluded: snapshot.untrackedIncluded,
     },
-    output: shareSafe ? null : (options.outputPath ?? "stdout"),
+    output: shareSafe ? null : (options.outputPath ?? options.outputLabel ?? "stdout"),
     shareSafe,
     change: {
       gitVisibleFiles: snapshot.files.length,
@@ -291,7 +292,7 @@ function buildSummary(document: ReportDocument, options: ReportOptions): string 
   const reportDestination = document.shareSafe
     ? "redacted"
     : options.outputPath === undefined
-    ? "on stdout"
+    ? `on ${options.outputLabel ?? "stdout"}`
     : `written to ${options.outputPath}${options.formats.length > 1 ? " (.md/.json)" : ""}`;
   return `Proofpack · ${document.change.gitVisibleFiles} Git-visible files · ${document.checks.passed} passed · ${document.checks.failed} failed · ${document.checks.notRun} not run${failureSuffix} · ${document.reviewPrompts.length} review prompts · report ${reportDestination}`;
 }

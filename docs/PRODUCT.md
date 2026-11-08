@@ -34,11 +34,19 @@ Proofpack reports evidence, not correctness. A successful test is not proof that
 - Separate observed facts, heuristics, unrun checks, and limitations.
 - Make no network requests, collect no telemetry, and invoke no model.
 
+## Current source, unreleased — MCP adapter
+
+- Expose one local, read-only `proofpack_check` tool over MCP stdio.
+- Return the same `0.3` Markdown or JSON evidence model, with optional `cwd`, `base`, and `shareSafe` inputs.
+- Support both `initialize`-based legacy clients and `2026-07-28` modern clients.
+- Keep the CLI, its explicit `--run` boundary, and the report schema stable.
+
 ## Later phases — planned
 
 - Add a reviewed `init` only if persisted per-repository defaults prove useful.
 - Import CI results or agent traces from documented formats.
 - Add a Conchbase adapter only after its public event contract stabilizes.
+- Publish the MCP adapter in the next npm version; `0.2.0` remains CLI-only.
 
 ## Explicitly out of scope
 
@@ -48,6 +56,7 @@ Proofpack reports evidence, not correctness. A successful test is not proof that
 - Sandboxing arbitrary project commands; explicitly run commands use the user's shell and privileges.
 - Parsing proprietary agent session logs or relying on Conchbase APIs.
 - Automatically changing Git state, files, permissions, or configuration through inspection.
+- MCP-side command execution, report-file writing, system opening, network publication, or LLM review.
 
 ## Success criteria
 

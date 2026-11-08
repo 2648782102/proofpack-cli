@@ -2,6 +2,21 @@
 
 All notable changes to Proofpack are documented here. This project is early-stage; report schema versions are independent of npm package versions.
 
+## [Unreleased]
+
+### Added
+
+- A read-only shared report core, consumed by both the CLI and the new local MCP stdio adapter.
+- `proofpack-mcp`: a zero-runtime-dependency, dual-era MCP server exposing one `proofpack_check` tool with `cwd`, `base`, `format`, and `shareSafe` inputs.
+- MCP contract, host configuration, security boundary, verification steps, and protocol reference documentation.
+- Automated tests for legacy and modern MCP handshakes, tool calls, share-safe/base reports, protocol errors, malformed input, and stdout cleanliness.
+
+### Safety boundaries
+
+- The MCP tool never executes project commands, writes files, opens a system application, makes network requests, or invokes an LLM.
+- Git inspection errors are returned as `isError` tool results; the server remains available.
+- The adapter is not included in the already published `0.2.0` npm tarball and requires the next package version for distribution.
+
 ## [0.2.0] - 2026-11-07
 
 ### Added
