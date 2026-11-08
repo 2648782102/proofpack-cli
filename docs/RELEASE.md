@@ -47,12 +47,13 @@ Use this checklist before publishing `proofpack-cli` to npm. Publication itself 
 - [ ] Create a granular access token with publish permission and bypass 2FA. For unscoped `proofpack-cli`, choose package access "All packages" or explicitly include `proofpack-cli` with Read and write, and enable "Bypass two-factor authentication"; a token scoped only to `@2648782102h` or without bypass 2FA returns E403. On macOS, run `scripts/setup-npm-token.sh` to store it in Keychain with hidden input; `scripts/publish.sh` reads it without putting the token in shell history, `.npmrc`, or the repository.
 - [ ] Alternatively, expose the token as `NPM_TOKEN` only for the publish command. In `zsh`, use `read -rs NPM_TOKEN; export NPM_TOKEN` so the value is hidden and not saved in history; do not put the literal token in a command line or committed file.
 - [ ] Use `PROVENANCE=1 scripts/publish.sh` only from an environment with npm provenance support, such as GitHub Actions OIDC. Local publishing defaults to plain `npm publish`; provenance is optional and not required for the first release.
-- [ ] If npm returns `E_STAGE_REQUIRED`, run `PUBLISH_MODE=stage scripts/publish.sh`. The script stages `0.2.0`; approve it in npmjs.com's Staged Packages tab with 2FA. Enable 2FA on the npm account first if it is disabled.
+- [ ] If npm returns `E_STAGE_REQUIRED`, run `PUBLISH_MODE=stage scripts/publish.sh`. The script stages the current package version; approve it in npmjs.com's Staged Packages tab with 2FA. Enable 2FA on the npm account first if it is disabled.
 - [ ] If the registry still returns E403, stop and resolve the account policy before retrying; do not repeatedly republish.
 - [ ] If `npm publish` returns E403 with "You may not perform that action with these credentials", verify the token's package scope. If it says "Two-factor authentication or granular access token with bypass 2fa enabled is required", recreate the token with Bypass 2FA enabled. If it says `E_STAGE_REQUIRED`, use staged publishing. The follow-up `npm view` 404 is a consequence of a failed direct publish, not a second failure.
 - [ ] Record the exact published tarball shasum/integrity from `npm stage publish` or `npm publish` output and reconcile it with `npm view proofpack-cli@<version> dist.integrity`.
 - [ ] Tag the release after merge; enable provenance only where the runtime supports it.
-- [ ] Create a GitHub release with concise, factual notes and no unverified safety claims; verify repository visibility before treating the release as a public distribution.
+- [ ] Push the `v<version>` tag only after the matching `docs/RELEASE_NOTES_v<version>.md` is committed. `.github/workflows/release.yml` creates or updates the GitHub Release with those notes.
+- [ ] Verify repository visibility before treating the release as a public distribution; release notes must contain no unverified safety claims.
 - [ ] Record the published version and tarball integrity in the release notes.
 
 ## Local token setup

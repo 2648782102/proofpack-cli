@@ -1,6 +1,6 @@
 # Decision 0003: Local MCP adapter boundary
 
-- Status: accepted for current source implementation
+- Status: accepted and released in `0.3.0`
 - Date: 2026-11-08
 
 ## Context
@@ -13,7 +13,7 @@ The MCP specification now includes both a `2026-07-28` modern era with per-reque
 
 Extract read-only report generation into `src/report-core.ts` and add `src/mcp.ts` as an independent zero-runtime-dependency stdio adapter. The adapter supports legacy and modern MCP openings, advertises one `proofpack_check` tool, and returns the stable `0.3` Markdown or JSON report.
 
-The adapter does not expose `--run`, `--output`, `--open`, command discovery, network calls, model calls, or telemetry. It does not vend SDK code; official specification pages and SDK wire behavior are references only. The published `0.2.0` tarball remains untouched; distribution requires the next package version.
+The adapter does not expose `--run`, `--output`, `--open`, command discovery, network calls, model calls, or telemetry. It does not vend SDK code; official specification pages and SDK wire behavior are references only. The published `0.2.0` tarball remains untouched; `0.3.0` distributes the adapter.
 
 ## Consequences
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented in the repository; not included in npm package `proofpack-cli@0.2.0`. The next package version must include the `proofpack-mcp` binary and this document, which `package.json` already lists in `files`.
+Implemented and published in npm package `proofpack-cli@0.3.0`. The `0.2.0` tarball remains CLI-only. The package includes the `proofpack-mcp` binary and this document.
 
 ## What it is
 
@@ -82,7 +82,7 @@ For a published package that exposes `proofpack-mcp`:
   "mcpServers": {
     "proofpack": {
       "command": "npx",
-      "args": ["-y", "--package=proofpack-cli@<version>", "proofpack-mcp"]
+      "args": ["-y", "--package=proofpack-cli@0.3.0", "proofpack-mcp"]
     }
   }
 }

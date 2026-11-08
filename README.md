@@ -4,9 +4,9 @@
 
 Proofpack helps an individual developer answer three questions after a coding task: what changed, what checks actually ran, and what remains unchecked. It records Git change facts, explicit command evidence, and heuristic review prompts; it does not claim that a change is correct.
 
-> Early development. Version `0.2.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, and rule prompts. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented. The current source tree also contains an unreleased local MCP stdio adapter; see [MCP contract](docs/MCP.md).
+> Early development. Version `0.3.0` is published on npm and implements `--base`, `--share-safe`, opt-in `--open`, Markdown/JSON reports, explicit `--run` checks, rule prompts, and a local MCP stdio adapter. Automatic check discovery, AI review, sandboxed execution, and repository-local `init` are not implemented. See [MCP contract](docs/MCP.md).
 
-Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-cli) · npm: [proofpack-cli](https://www.npmjs.com/package/proofpack-cli) · Release: [v0.2.0](https://github.com/2648782102/proofpack-cli/releases/tag/v0.2.0)
+Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-cli) · npm: [proofpack-cli](https://www.npmjs.com/package/proofpack-cli) · Release: [v0.3.0](https://github.com/2648782102/proofpack-cli/releases/tag/v0.3.0)
 
 ## Product principles
 
@@ -18,24 +18,41 @@ Repository: [2648782102/proofpack-cli](https://github.com/2648782102/proofpack-c
 
 ## Current distribution shapes
 
-The published `0.2.0` package is a CLI only. The current source tree adds a separate `proofpack-mcp` stdio entrypoint that exposes the read-only report as an MCP tool; it is slated for the next package version and is not in `0.2.0`. MCP is a host-launched local subprocess, not a cloud service or a plugin. See [docs/MCP.md](docs/MCP.md) for the protocol contract and host configuration.
+The `0.3.0` package contains both the `proofpack` CLI and the `proofpack-mcp` stdio entrypoint. MCP is a host-launched local subprocess, not a cloud service or a host plugin. See [docs/MCP.md](docs/MCP.md) for the protocol contract and host configuration.
+
+## MCP quick start
+
+After installing the package in a project, configure an MCP host to launch the local binary:
+
+```json
+{
+  "mcpServers": {
+    "proofpack": {
+      "command": "npx",
+      "args": ["-y", "--package=proofpack-cli@0.3.0", "proofpack-mcp"]
+    }
+  }
+}
+```
+
+The host then sees one read-only `proofpack_check` tool. It generates a Markdown or JSON acceptance report without executing project commands or writing files.
 
 ## Install and first use
 
 Use npm without a global install:
 
 ```sh
-npx proofpack-cli@0.2.0 check
+npx proofpack-cli@0.3.0 check
 ```
 
 Or install the package in a project:
 
 ```sh
-npm install --save-dev proofpack-cli@0.2.0
+npm install --save-dev proofpack-cli@0.3.0
 npx proofpack check
 ```
 
-The published binary is named `proofpack`.
+The CLI binary is named `proofpack`; the MCP binary is named `proofpack-mcp`.
 
 This prints a Markdown report to stdout without changing the working tree, running project commands, or making network requests. To save it, pass an explicit path:
 
@@ -91,6 +108,7 @@ npm run build
 - [Roadmap](docs/ROADMAP.md)
 - [Development handoff](docs/DEVELOPMENT.md)
 - [Release checklist](docs/RELEASE.md)
+- [0.3.0 release notes](docs/RELEASE_NOTES_v0.3.0.md)
 - [Changelog](CHANGELOG.md)
 - [Decisions](docs/decisions/)
 

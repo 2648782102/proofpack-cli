@@ -2,7 +2,7 @@
 
 ## Runtime shape
 
-Proofpack is a local Node.js CLI. The unreleased MCP adapter is a host-launched stdio subprocess; it is not a network server. The runtime has no browser UI, LLM client, network client, daemon, or telemetry. `--open` is an explicit local system-opener action.
+Proofpack is a local Node.js CLI with a companion MCP stdio entrypoint. The MCP adapter is host-launched; it is not a network server. The runtime has no browser UI, LLM client, network client, daemon, or telemetry. `--open` is an explicit local system-opener action.
 
 ```text
 CLI arguments

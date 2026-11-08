@@ -4,7 +4,7 @@
 
 Proofpack is local-first. Default inspection makes no network requests, sends no telemetry, runs no user command, and reads only Git status and diff statistics. With explicit `--run`, Proofpack also captures bounded stdout/stderr, command text, timing, and exit outcomes. Reports may contain proprietary source paths, branch names, commands, and command output; users must review reports before sharing them.
 
-The unreleased MCP stdio adapter uses the same read-only inspection. It returns reports to the MCP host as tool results; it does not upload them, write them to disk, execute project commands, start a network listener, or invoke a model. The host controls the process working directory and may choose how to use returned content.
+The MCP stdio adapter uses the same read-only inspection. It returns reports to the MCP host as tool results; it does not upload them, write them to disk, execute project commands, start a network listener, or invoke a model. The host controls the process working directory and may choose how to use returned content.
 
 ## Safe defaults
 

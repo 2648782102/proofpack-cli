@@ -2,7 +2,7 @@
 
 All notable changes to Proofpack are documented here. This project is early-stage; report schema versions are independent of npm package versions.
 
-## [Unreleased]
+## [0.3.0] - 2026-11-08
 
 ### Added
 
@@ -15,7 +15,9 @@ All notable changes to Proofpack are documented here. This project is early-stag
 
 - The MCP tool never executes project commands, writes files, opens a system application, makes network requests, or invokes an LLM.
 - Git inspection errors are returned as `isError` tool results; the server remains available.
-- The adapter is not included in the already published `0.2.0` npm tarball and requires the next package version for distribution.
+- The adapter is distributed in `0.3.0`; the earlier `0.2.0` npm tarball remains CLI-only.
+
+[0.3.0]: https://github.com/2648782102/proofpack-cli/releases/tag/v0.3.0
 
 ## [0.2.0] - 2026-11-07
 

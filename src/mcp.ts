@@ -5,6 +5,7 @@ import { PROOFPACK_VERSION } from "./version.js";
 import { ReportGenerationError, generateReport } from "./report-core.js";
 
 const SERVER_NAME = "proofpack-mcp";
+const SERVER_VERSION = PROOFPACK_VERSION;
 const MODERN_PROTOCOL_VERSION = "2026-07-28";
 const LEGACY_PROTOCOL_VERSIONS = [
   "2025-11-25",
@@ -19,7 +20,7 @@ const CLIENT_CAPABILITIES_META_KEY = "io.modelcontextprotocol/clientCapabilities
 const SERVER_INFO_META_KEY = "io.modelcontextprotocol/serverInfo";
 const MAX_LINE_BYTES = 1024 * 1024;
 
-const SERVER_INFO = { name: SERVER_NAME, version: PROOFPACK_VERSION };
+const SERVER_INFO = { name: SERVER_NAME, version: SERVER_VERSION };
 const SERVER_CAPABILITIES = { tools: {} };
 const INSTRUCTIONS = "Generate a local, read-only Proofpack acceptance report for the current Git repository. The tool never runs project commands or writes files.";
 

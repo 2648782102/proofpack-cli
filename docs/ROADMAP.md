@@ -26,12 +26,12 @@
 - Add a reviewed `init` only if persisted defaults are requested.
 - Measure first-run friction through opt-in feedback, without telemetry by default.
 
-## Current source, unreleased — local MCP adapter
+## Phase 4 — local MCP adapter (implemented in `0.3.0`)
 
 - Extract a shared read-only report core.
 - Add a zero-dependency, dual-era MCP stdio server with one `proofpack_check` tool.
 - Document host configuration, protocol compatibility, security boundaries, and verification.
-- Publish the adapter in the next npm version; do not modify the already published `0.2.0`.
+- Publish the adapter in `0.3.0`; do not modify the already published `0.2.0`.
 
 ## Later, only if users ask
 
