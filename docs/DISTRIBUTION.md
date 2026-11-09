@@ -58,7 +58,9 @@ Order:
 4. Publish one Show HN or one Chinese community post, not both on the same day.
 5. Reply to feedback and record reproducible issues before the next release.
 
-The `awesome-mcp-servers` PR [#18924](https://github.com/punkpeye/awesome-mcp-servers/pull/18924) is open. Its automated review comment now asks for a Glama listing and score badge. Glama requires a separate account signup and a Dockerfile added directly to Glama for its checks; do not add a badge before the server is actually listed. Treat this as an optional follow-up, not a blocker for npm or MCP Registry publication.
+The `awesome-mcp-servers` PR [#18924](https://github.com/punkpeye/awesome-mcp-servers/pull/18924) is open. Its automated review comment asks for a Glama listing and score badge. A Glama `Runs from source` submission for `https://github.com/2648782102/proofpack-cli` is pending review; the form reports `A submission for this repository is already pending review`. The public listing URL still returns 404, and the score badge still says `This MCP server is not listed on Glama`, so the PR entry does not include a Glama badge.
+
+Glama's form says approved submissions receive email instructions for providing a Dockerfile for automated safety and quality checks; only servers that pass those checks are indexed. Do not add a Dockerfile to this repository preemptively or a badge to the PR until the public listing exists. Treat this as an optional follow-up, not a blocker for npm or MCP Registry publication.
 
 ## Guardrails
 

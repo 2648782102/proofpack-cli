@@ -21,3 +21,10 @@ PR checklist:
 - Keep the current list's alphabetical order and one-server-per-line style.
 - Verify the repository link and the local/TypeScript/operating-system marks.
 - Do not include a hosted URL; this server is stdio/local.
+
+Current status:
+
+- PR [#18924](https://github.com/punkpeye/awesome-mcp-servers/pull/18924) is open with the `missing-glama` label.
+- A Glama submission for this repository is pending review; the public listing and score badge are not available yet.
+- Keep the one-line entry without a Glama score badge until the listing exists and the badge reflects a real score.
+- After approval, follow Glama's emailed Dockerfile instructions before expecting the server to be indexed.
