@@ -4,6 +4,7 @@ import type { CheckResult } from "../src/checks.js";
 import type { GitSnapshot } from "../src/git.js";
 import type { ReviewPrompt } from "../src/rules.js";
 import { buildReport, escapeInlineCode, SCHEMA_VERSION } from "../src/report.js";
+import { buildReviewPrompts } from "../src/rules.js";
 
 const snapshot: GitSnapshot = {
   repositoryRoot: "/repo",
@@ -130,4 +131,46 @@ test("keeps no checks and no prompt matches explicitly unknown, not passed", () 
 
 test("escapes inline code containing backticks and control characters", () => {
   assert.equal(escapeInlineCode("a``b\n`c"), "``` a``b `c ```");
+});
+
+test("renders Simplified Chinese Markdown and JSON text fields while keeping the schema stable", () => {
+  const localizedPrompt = buildReviewPrompts([
+    {
+      path: "package.json",
+      previousPath: undefined,
+      kind: "modified",
+      staged: false,
+      worktree: true,
+      diffStat: { insertions: 1, deletions: 0, binary: false },
+    },
+  ], "zh-CN")[0];
+  assert.ok(localizedPrompt);
+  const report = buildReport(snapshot, [passedCheck()], [localizedPrompt], {
+    formats: ["markdown", "json"],
+    outputPath: undefined,
+    language: "zh-CN",
+    generatedAt: "2026-11-07T12:00:00.000Z",
+  });
+
+  assert.match(report.markdown, /# Proofpack 验收报告/);
+  assert.match(report.markdown, /## 变更/);
+  assert.match(report.markdown, /## 未检查/);
+  assert.match(report.markdown, /## 复核提示/);
+  assert.match(report.markdown, /## 限制/);
+  assert.match(report.markdown, /依赖清单或锁文件发生变更/);
+  assert.match(report.markdown, /本报告不证明正确性/);
+  assert.match(report.summary, /个 Git 可见文件/);
+
+  const parsed = JSON.parse(report.json) as {
+    schemaVersion: string;
+    repository: { changeView: string };
+    checks: { results: Array<{ status: string }> };
+    reviewPrompts: Array<{ rule: string }>;
+    limitations: string[];
+  };
+  assert.equal(parsed.schemaVersion, SCHEMA_VERSION);
+  assert.match(parsed.repository.changeView, /HEAD/);
+  assert.equal(parsed.checks.results[0]?.status, "passed");
+  assert.match(parsed.reviewPrompts[0]?.rule ?? "", /依赖清单/);
+  assert.match(parsed.limitations[0] ?? "", /不证明正确性/);
 });

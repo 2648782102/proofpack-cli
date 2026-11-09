@@ -30,9 +30,10 @@ MCP host
 - `src/version.ts`: single source for the package/CLI/MCP implementation version.
 - `src/report-core.ts`: shared read-only Git inspection, review prompts, and `0.3` report generation without command execution or file writes.
 - `src/git.ts`: locate the repository root, parse porcelain v2 status and numstat with NUL-delimited Buffers, resolve an optional base ref with `--end-of-options`, and parse base name-status/numstat.
+- `src/locale.ts`: display-language aliases, Chinese/English report text, and presentation-only translations for CLI and MCP messages.
 - `src/checks.ts`: preview and run explicit shell commands sequentially; bound process output, sanitize control sequences, redact common secrets/home paths, track timing, timeout, interruption, and spawn errors.
 - `src/rules.ts`: deterministic path/stat review prompts with stable IDs and evidence strings.
-- `src/report.ts`: build the `0.3` evidence model, apply share-safe omission before rendering, and separate facts, heuristics, unrun checks, and limits.
+- `src/report.ts`: build the `0.3` evidence model, apply share-safe omission and display-language text before rendering, and separate facts, heuristics, unrun checks, and limits.
 - `src/output.ts`: constrain single/multiple output paths to the repository and reject tracked files, Git metadata, outside paths, or symlink traversal.
 - `src/cli.ts`: coordinate inspection, explicit checks, rendering, stdout/file output, and documented exit codes.
 - `src/open.ts`: launch the platform's system opener only for an explicit `--open` invocation.

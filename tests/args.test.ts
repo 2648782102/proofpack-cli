@@ -13,6 +13,7 @@ test("parses check defaults", () => {
     base: undefined,
     shareSafe: false,
     open: false,
+    language: "en",
   });
 });
 
@@ -45,8 +46,30 @@ test("parses repeatable commands, formats, output, and timeout", () => {
       base: "main",
       shareSafe: true,
       open: false,
+      language: "en",
     },
   );
+});
+
+test("parses Chinese language option and environment default", () => {
+  const parsed = parseArguments(["check", "--lang=zh-CN"]);
+  assert.equal(parsed.kind, "check");
+  if (parsed.kind === "check") assert.equal(parsed.language, "zh-CN");
+
+  const environmentParsed = parseArguments(["check"]);
+  assert.equal(environmentParsed.kind, "check");
+  if (environmentParsed.kind === "check") assert.equal(environmentParsed.language, "en");
+
+  const originalLanguage = process.env.PROOFPACK_LANG;
+  try {
+    process.env.PROOFPACK_LANG = "zh-Hans";
+    const environmentChinese = parseArguments(["check"]);
+    assert.equal(environmentChinese.kind, "check");
+    if (environmentChinese.kind === "check") assert.equal(environmentChinese.language, "zh-CN");
+  } finally {
+    if (originalLanguage === undefined) delete process.env.PROOFPACK_LANG;
+    else process.env.PROOFPACK_LANG = originalLanguage;
+  }
 });
 
 test("parses --open with an output path", () => {
@@ -90,6 +113,7 @@ test("rejects invalid arguments and ambiguous output/format combinations", () =>
   assert.throws(() => parseArguments(["check", "--output-limit-bytes", "0"]), ArgumentError);
   assert.throws(() => parseArguments(["check", "--base", "v1^{commit}"]), ArgumentError);
   assert.throws(() => parseArguments(["check", "--open"]), ArgumentError);
+  assert.throws(() => parseArguments(["check", "--lang", "fr"]), ArgumentError);
   assert.throws(() => parseArguments(["check", "--format=json", "--output=a.json", "--open"]), ArgumentError);
   assert.throws(
     () => parseArguments(["check", "--output", "a.md", "--output", "b.md"]),

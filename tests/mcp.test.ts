@@ -133,6 +133,36 @@ test("unsupported modern versions and invalid tool arguments return protocol err
   assert.equal(responses[1]?.error?.code, -32602);
 });
 
+test("language argument renders a Chinese report and JSON text fields", () => {
+  const directory = makeRepository();
+  const responses = runMcp([
+    request(1, "tools/list", { _meta: modernMeta() }),
+    request(2, "tools/call", {
+      _meta: modernMeta(),
+      name: "proofpack_check",
+      arguments: { cwd: directory, language: "zh-CN" },
+    }),
+    request(3, "tools/call", {
+      _meta: modernMeta(),
+      name: "proofpack_check",
+      arguments: { cwd: directory, format: "json", language: "zh-CN" },
+    }),
+    request(4, "tools/call", {
+      _meta: modernMeta(),
+      name: "proofpack_check",
+      arguments: { cwd: directory, language: "fr" },
+    }),
+  ], directory) as Array<Record<string, any>>;
+
+  assert.deepEqual(responses[0]?.result?.tools?.[0]?.inputSchema?.properties?.language?.enum, ["en", "zh-CN"]);
+  const markdown = responses[1]?.result?.content?.[0]?.text as string;
+  assert.match(markdown, /# Proofpack 验收报告/);
+  assert.match(markdown, /## 未检查/);
+  const document = JSON.parse(responses[2]?.result?.content?.[0]?.text as string) as { limitations: string[] };
+  assert.match(document.limitations[0] ?? "", /不证明正确性/);
+  assert.equal(responses[3]?.error?.code, -32602);
+});
+
 test("MCP errors are tool results, not process failures", () => {
   const directory = mkdtempSync(path.join(os.tmpdir(), "proofpack-mcp-non-git-"));
   const responses = runMcp([

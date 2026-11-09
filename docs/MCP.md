@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented and published in npm package `proofpack-cli@0.3.1`. The `0.2.0` tarball remains CLI-only. The package includes the `proofpack-mcp` binary and this document.
+Implemented and published in npm package `proofpack-cli@0.3.2`. The `0.2.0` tarball remains CLI-only. The package includes the `proofpack-mcp` binary and this document.
 
 ## What it is
 
@@ -45,7 +45,8 @@ Input schema:
     "cwd": { "type": "string" },
     "base": { "type": "string" },
     "format": { "type": "string", "enum": ["markdown", "json"] },
-    "shareSafe": { "type": "boolean" }
+    "shareSafe": { "type": "boolean" },
+    "language": { "type": "string", "enum": ["en", "zh-CN"] }
   },
   "additionalProperties": false
 }
@@ -55,6 +56,7 @@ Input schema:
 - `base`: optional Git ref for committed, staged, and worktree comparison. Revision suffix syntax `^{...}` is rejected.
 - `format`: `markdown` by default, or `json`.
 - `shareSafe`: best-effort omission of identifying fields. Even a share-safe report must be reviewed before sharing.
+- `language`: display language for Markdown and JSON text fields. Defaults to `en` or `PROOFPACK_LANG`; the argument overrides the environment variable. Schema keys, status values, paths, command stdout, and rule IDs are not translated.
 
 The tool has `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, and `openWorldHint: false`. It returns the report as one text content block. Tool results also include small `structuredContent` metadata; it is not a correctness verdict. Modern `tools/list` and `tools/call` results use `resultType: "complete"`; modern `server/discover` and `tools/list` include `ttlMs` and `cacheScope`.
 
@@ -82,7 +84,7 @@ For a published package that exposes `proofpack-mcp`:
   "mcpServers": {
     "proofpack": {
       "command": "npx",
-      "args": ["-y", "--package=proofpack-cli@0.3.1", "proofpack-mcp"]
+      "args": ["-y", "--package=proofpack-cli@0.3.2", "proofpack-mcp"]
     }
   }
 }

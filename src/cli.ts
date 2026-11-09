@@ -8,6 +8,7 @@ import { GitInspectionError, inspectGitChanges } from "./git.js";
 import { OpenError, openReport } from "./open.js";
 import { OutputError, resolveReportOutputFiles } from "./output.js";
 import { buildReport } from "./report.js";
+import { getReportText } from "./locale.js";
 import { buildReviewPrompts } from "./rules.js";
 import { PROOFPACK_VERSION } from "./version.js";
 
@@ -30,10 +31,11 @@ function describeError(error: unknown): string {
 }
 
 async function main(): Promise<number> {
+  let text = getReportText("en");
   const abortController = new AbortController();
   const onInterrupt = (signal: NodeJS.Signals): void => {
     if (!abortController.signal.aborted) {
-      process.stderr.write(`\nProofpack: received ${signal}; stopping checks.\n`);
+      process.stderr.write(`\n${text.cli.receivedSignal(signal)}\n`);
       abortController.abort(new Error(`Received ${signal}`));
     }
   };
@@ -42,6 +44,7 @@ async function main(): Promise<number> {
 
   try {
     const args = parseArguments(process.argv.slice(2));
+    text = getReportText(args.kind === "check" ? args.language : "en");
     if (args.kind === "help") {
       process.stdout.write(HELP_TEXT);
       return 0;
@@ -66,9 +69,9 @@ async function main(): Promise<number> {
       timeoutMs: args.timeoutSeconds * 1000,
       outputLimitBytes: args.outputLimitBytes,
       abortSignal: abortController.signal,
-      preview: args.shareSafe
-        ? (message) => process.stderr.write(message.replace(/check \d+\/\d+:.*$/, "check: [OMITTED]\n"))
-        : (message) => process.stderr.write(`${message}\n`),
+      language: args.language,
+      shareSafe: args.shareSafe,
+      preview: (message) => process.stderr.write(`${message}\n`),
     });
 
     const reportSnapshot = args.commands.length === 0
@@ -76,11 +79,12 @@ async function main(): Promise<number> {
       : args.base === undefined
         ? inspectGitChanges()
         : inspectGitChanges({ base: args.base });
-    const reviewPrompts = buildReviewPrompts(reportSnapshot.files);
+    const reviewPrompts = buildReviewPrompts(reportSnapshot.files, args.language);
     const report = buildReport(reportSnapshot, checksResult.results, reviewPrompts, {
       formats: args.formats,
       outputPath: args.outputPath,
       shareSafe: args.shareSafe,
+      language: args.language,
     });
 
     if (outputFiles === undefined) {
@@ -97,13 +101,13 @@ async function main(): Promise<number> {
       }
       process.stderr.write(`${report.summary}\n`);
       for (const outputFile of outputFiles) {
-        process.stderr.write(`Proofpack: wrote ${outputFile.displayPath}\n`);
+        process.stderr.write(`${text.cli.wrote(outputFile.displayPath)}\n`);
       }
       if (args.open) {
         const markdownOutput = outputFiles.find((outputFile) => outputFile.format === "markdown");
         if (markdownOutput !== undefined) {
           openReport(markdownOutput.absolutePath);
-          process.stderr.write("Proofpack: opened the Markdown report with the system opener.\n");
+          process.stderr.write(`${text.cli.opened}\n`);
         }
       }
     }
@@ -118,25 +122,25 @@ async function main(): Promise<number> {
   } catch (error) {
     if (abortController.signal.aborted) return 4;
     if (error instanceof ArgumentError) {
-      process.stderr.write(`Proofpack: ${error.message}\n`);
+      process.stderr.write(`${text.cli.errorPrefix}${error.message}\n`);
       return 2;
     }
     if (error instanceof GitInspectionError) {
-      process.stderr.write(`Proofpack: ${error.message}\n`);
-      process.stderr.write("Next: run the command inside a readable Git repository.\n");
+      process.stderr.write(`${text.cli.errorPrefix}${error.message}\n`);
+      process.stderr.write(`${text.cli.nextGitRepository}\n`);
       return 3;
     }
     if (error instanceof OutputError) {
-      process.stderr.write(`Proofpack: ${error.message}\n`);
-      process.stderr.write("Next: choose an untracked output path inside the repository.\n");
+      process.stderr.write(`${text.cli.errorPrefix}${error.message}\n`);
+      process.stderr.write(`${text.cli.nextOutputPath}\n`);
       return 3;
     }
     if (error instanceof OpenError) {
-      process.stderr.write(`Proofpack: ${error.message}\n`);
-      process.stderr.write("Next: open the written report manually or choose another system opener.\n");
+      process.stderr.write(`${text.cli.errorPrefix}${error.message}\n`);
+      process.stderr.write(`${text.cli.nextOpen}\n`);
       return 3;
     }
-    process.stderr.write(`Proofpack: report generation failed: ${describeError(error)}\n`);
+    process.stderr.write(`${text.cli.reportGenerationFailed(describeError(error))}\n`);
     return 3;
   } finally {
     process.removeListener("SIGINT", onInterrupt);

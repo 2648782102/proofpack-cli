@@ -1,4 +1,5 @@
 import type { FileChange } from "./git.js";
+import { getReportText, type ReportLanguage } from "./locale.js";
 
 export interface ReviewPrompt {
   id: string;
@@ -169,8 +170,9 @@ const PATH_RULES: PathRuleDefinition[] = [
   },
 ];
 
-export function buildReviewPrompts(files: readonly FileChange[]): ReviewPrompt[] {
+export function buildReviewPrompts(files: readonly FileChange[], language: ReportLanguage = "en"): ReviewPrompt[] {
   const prompts: ReviewPrompt[] = [];
+  const text = getReportText(language);
 
   for (const file of files) {
     const candidatePaths = [file.path, file.previousPath].filter(
@@ -179,25 +181,27 @@ export function buildReviewPrompts(files: readonly FileChange[]): ReviewPrompt[]
     for (const rule of PATH_RULES) {
       const matchedPath = candidatePaths.find((candidate) => rule.matches(candidate));
       if (matchedPath === undefined) continue;
+      const translated = text.reviewRules[rule.id] ?? { rule: rule.rule, reason: rule.reason };
       prompts.push({
         id: rule.id,
         path: file.path,
         previousPath: file.previousPath ?? null,
-        rule: rule.rule,
-        reason: rule.reason,
-        evidence: `Matched path: ${matchedPath}. Suggested inspection: git diff -- ${matchedPath}`,
+        rule: translated.rule,
+        reason: translated.reason,
+        evidence: text.matchedPathEvidence(matchedPath),
       });
     }
 
     const deletions = file.diffStat.deletions;
     if (deletions !== undefined && deletions >= LARGE_DELETION_THRESHOLD) {
+      const translated = text.reviewRules["PP-LARGE-DELETION-001"];
       prompts.push({
         id: "PP-LARGE-DELETION-001",
         path: file.path,
         previousPath: file.previousPath ?? null,
-        rule: "Large deletion",
-        reason: "Large deletions deserve a focused review of removed behavior and data.",
-        evidence: `Git numstat reports ${deletions} deletions for ${file.path}.`,
+        rule: translated?.rule ?? "Large deletion",
+        reason: translated?.reason ?? "Large deletions deserve a focused review of removed behavior and data.",
+        evidence: text.largeDeletionEvidence(deletions, file.path),
       });
     }
   }

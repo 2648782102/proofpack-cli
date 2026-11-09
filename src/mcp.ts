@@ -3,6 +3,7 @@
 import readline from "node:readline";
 import { PROOFPACK_VERSION } from "./version.js";
 import { ReportGenerationError, generateReport } from "./report-core.js";
+import { getReportText, parseReportLanguage, REPORT_LANGUAGES, resolveEnvironmentLanguage, type ReportLanguage } from "./locale.js";
 
 const SERVER_NAME = "proofpack-mcp";
 const SERVER_VERSION = PROOFPACK_VERSION;
@@ -47,6 +48,11 @@ const TOOL = {
       shareSafe: {
         type: "boolean",
         description: "Omit branch, HEAD, paths, base commit, and other identifying evidence on a best-effort basis.",
+      },
+      language: {
+        type: "string",
+        enum: [...REPORT_LANGUAGES],
+        description: "Display language for Markdown and JSON text fields. Defaults to en or PROOFPACK_LANG.",
       },
     },
     additionalProperties: false,
@@ -232,6 +238,7 @@ function parseToolArguments(message: JsonRpcMessage): {
   base?: string;
   format: "markdown" | "json";
   shareSafe: boolean;
+  language: ReportLanguage;
 } {
   const params = message.params;
   if (params === undefined || typeof params.name !== "string") {
@@ -244,7 +251,7 @@ function parseToolArguments(message: JsonRpcMessage): {
   if (!isRecord(argumentsValue)) {
     throw new InvalidParamsError("`tools/call` arguments must be an object.");
   }
-  const allowedKeys = new Set(["cwd", "base", "format", "shareSafe"]);
+  const allowedKeys = new Set(["cwd", "base", "format", "shareSafe", "language"]);
   for (const key of Object.keys(argumentsValue)) {
     if (!allowedKeys.has(key)) throw new InvalidParamsError(`Unknown tool argument: ${key}.`);
   }
@@ -252,6 +259,7 @@ function parseToolArguments(message: JsonRpcMessage): {
   const base = argumentsValue.base;
   const format = argumentsValue.format ?? "markdown";
   const shareSafe = argumentsValue.shareSafe ?? false;
+  const environmentLanguage = resolveEnvironmentLanguage();
   if (cwd !== undefined && (typeof cwd !== "string" || cwd.length === 0 || cwd.includes("\0"))) {
     throw new InvalidParamsError("`cwd` must be a non-empty path string.");
   }
@@ -264,11 +272,21 @@ function parseToolArguments(message: JsonRpcMessage): {
   if (typeof shareSafe !== "boolean") {
     throw new InvalidParamsError("`shareSafe` must be a boolean.");
   }
+  if (argumentsValue.language !== undefined && typeof argumentsValue.language !== "string") {
+    throw new InvalidParamsError("`language` must be a string.");
+  }
+  const parsedLanguage = typeof argumentsValue.language === "string"
+    ? parseReportLanguage(argumentsValue.language)
+    : environmentLanguage;
+  if (parsedLanguage === undefined) {
+    throw new InvalidParamsError(`\`language\` must be one of: ${REPORT_LANGUAGES.join(", ")}.`);
+  }
   return {
     ...(cwd === undefined ? {} : { cwd }),
     ...(base === undefined ? {} : { base }),
     format,
     shareSafe,
+    language: parsedLanguage,
   };
 }
 
@@ -281,6 +299,7 @@ function callTool(message: JsonRpcMessage): JsonRecord {
       shareSafe: args.shareSafe,
       formats: [args.format],
       outputLabel: "mcp tool result",
+      language: args.language,
     });
     const text = args.format === "json" ? generated.report.json : generated.report.markdown;
     const toolResult: JsonRecord = {
@@ -295,8 +314,9 @@ function callTool(message: JsonRpcMessage): JsonRecord {
     return eraFor(message) === "modern" ? completeResult(toolResult) : toolResult;
   } catch (error) {
     if (error instanceof ReportGenerationError) {
+      const text = getReportText(args.language);
       const toolResult: JsonRecord = {
-        content: [{ type: "text", text: `Proofpack could not generate a report: ${error.message}` }],
+        content: [{ type: "text", text: text.mcp.reportFailure(error.message) }],
         structuredContent: { error: error.reason },
         isError: true,
       };

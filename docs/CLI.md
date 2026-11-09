@@ -18,6 +18,7 @@ proofpack check --run "npm test" --format markdown,json --output .proofpack/revi
 proofpack check --run "npm test" --share-safe --output .proofpack/share.md
 proofpack check --output .proofpack/review.md --open
 proofpack check --run "npm test" --timeout 30 --output-limit-bytes 65536
+proofpack check --lang zh-CN
 ```
 
 Implemented options:
@@ -30,6 +31,7 @@ Implemented options:
 - `--open`: open a written Markdown report with the system opener after generation. Requires `--output` and a Markdown format. This is an explicit local action, not an upload or default behavior.
 - `--timeout <seconds>`: per-command timeout from 1 to 3600 seconds; default 120. On timeout, Proofpack terminates the process tree and marks remaining commands `not-run`.
 - `--output-limit-bytes <count>`: per-stream stdout/stderr cap from 1 to 1048576 bytes; default 32768.
+- `--lang <language>`: display language for Markdown and JSON text fields: `en` (default) or `zh-CN`. `PROOFPACK_LANG` also works; the flag overrides the environment variable. Schema keys, status values, paths, command stdout, and rule IDs are not translated.
 - `--help`, `--version` in command position (`proofpack --help`, `proofpack --version`).
 
 Deferred: `init`, automatic check discovery, AI review, sandboxing, and network integrations. Unknown commands/options return exit code `2`. Repository-local `init` is intentionally omitted because it would write files to the active worktree without a reviewed conflict policy.

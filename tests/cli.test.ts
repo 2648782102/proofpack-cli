@@ -39,6 +39,7 @@ function makeRepository(): string {
 test("help and version work without a Git repository", () => {
   const directory = mkdtempSync(path.join(os.tmpdir(), "proofpack-help-test-"));
   assert.equal(runCli(["--help"], directory).status, 0);
+  assert.match(runCli(["--help"], directory).stdout, /--lang/);
   assert.match(runCli(["--version"], directory).stdout, /^proofpack 0\.3\.2\n$/);
 });
 
@@ -226,6 +227,31 @@ test("share-safe omits paths and command output from a written report", () => {
   assert.match(result.stderr, /\[OMITTED\]/);
   assert.equal(result.stderr.includes("secret output marker"), false);
   assert.equal(result.stderr.includes("node -e"), false);
+});
+
+test("Chinese language renders localized Markdown and CLI messages", () => {
+  const directory = makeRepository();
+  const result = runCli(
+    [
+      "check",
+      "--lang",
+      "zh-CN",
+      "--run",
+      "node -e \"console.log('hello')\"",
+    ],
+    directory,
+  );
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /# Proofpack 验收报告/);
+  assert.match(result.stdout, /## 未检查/);
+  assert.match(result.stderr, /正在执行检查/);
+});
+
+test("PROOFPACK_LANG selects Chinese without a flag", () => {
+  const directory = makeRepository();
+  const result = runCli(["check"], directory, { ...process.env, PROOFPACK_LANG: "zh-Hans" });
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /# Proofpack 验收报告/);
 });
 
 test("output validation rejects tracked files, outside paths, and symlink traversal", () => {

@@ -1,4 +1,5 @@
 import path from "node:path";
+import { parseReportLanguage, REPORT_LANGUAGES, resolveEnvironmentLanguage, type ReportLanguage } from "./locale.js";
 
 export type ReportFormat = "markdown" | "json";
 
@@ -15,6 +16,7 @@ export type CliArguments =
       base: string | undefined;
       shareSafe: boolean;
       open: boolean;
+      language: ReportLanguage;
     };
 
 export class ArgumentError extends Error {}
@@ -28,7 +30,7 @@ const VALID_FORMATS = new Set<ReportFormat>(["markdown", "json"]);
 export const HELP_TEXT = `Proofpack — local acceptance report for Git changes
 
 Usage:
-  proofpack check [--run <command> ...] [--base <ref>] [--format <formats>] [--output <path>] [--share-safe] [--open] [--timeout <seconds>] [--output-limit-bytes <count>]
+  proofpack check [--run <command> ...] [--base <ref>] [--format <formats>] [--output <path>] [--share-safe] [--open] [--timeout <seconds>] [--output-limit-bytes <count>] [--lang <language>]
   proofpack --help
   proofpack --version
 
@@ -46,6 +48,7 @@ Options:
                       --output and a Markdown format.
   --timeout <seconds> Per-command timeout from 1 to 3600 seconds. Default 120.
   --output-limit-bytes <count>  Per-stream stdout/stderr cap, 1 to 1048576 bytes. Default 32768.
+  --lang <language>   Display language: en (default) or zh-CN. PROOFPACK_LANG also works.
   --help              Show this help.
   --version           Show the version.
 
@@ -147,6 +150,8 @@ export function parseArguments(args: readonly string[]): CliArguments {
   let shareSafeProvided = false;
   let open = false;
   let openProvided = false;
+  let language = resolveEnvironmentLanguage();
+  let languageProvided = false;
 
   for (let index = 1; index < args.length; index += 1) {
     const token = args[index];
@@ -235,6 +240,19 @@ export function parseArguments(args: readonly string[]): CliArguments {
       continue;
     }
 
+    if (token === "--lang" || token.startsWith("--lang=")) {
+      if (languageProvided) throw new ArgumentError("`--lang` may be supplied only once.");
+      const optionValue = readOptionValue(args, index, "--lang");
+      const parsedLanguage = parseReportLanguage(optionValue.value);
+      if (parsedLanguage === undefined) {
+        throw new ArgumentError(`\`--lang\` must be one of: ${REPORT_LANGUAGES.join(", ")}.`);
+      }
+      language = parsedLanguage;
+      languageProvided = true;
+      index = optionValue.nextIndex;
+      continue;
+    }
+
     throw new ArgumentError(`Unknown option: ${token}. Try \`proofpack --help\`.`);
   }
 
@@ -261,5 +279,6 @@ export function parseArguments(args: readonly string[]): CliArguments {
     base,
     shareSafe,
     open,
+    language,
   };
 }

@@ -1,6 +1,7 @@
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { homedir } from "node:os";
 import { StringDecoder } from "node:string_decoder";
+import { getReportText, type ReportLanguage } from "./locale.js";
 
 export type CheckStatus =
   | "passed"
@@ -45,6 +46,8 @@ export interface RunChecksOptions {
   preview?: (message: string) => void;
   abortSignal?: AbortSignal;
   shell?: ShellResolver;
+  language?: ReportLanguage;
+  shareSafe?: boolean;
 }
 
 export interface RunChecksResult {
@@ -246,9 +249,13 @@ async function runCommand(
 ): Promise<CommandOutcome> {
   const readNow = options.now ?? (() => new Date());
   const redactedCommand = redactText(command);
-  options.preview?.(
-    `Proofpack: running check ${index + 1}/${total}: ${sanitizeForTerminal(redactedCommand.text)}`,
-  );
+  const text = getReportText(options.language ?? "en");
+  options.preview?.(text.cli.runningCheck(
+    index + 1,
+    total,
+    sanitizeForTerminal(redactedCommand.text),
+    options.shareSafe ?? false,
+  ));
 
   if (options.abortSignal?.aborted === true) {
     return {

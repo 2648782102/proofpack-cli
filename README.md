@@ -111,6 +111,12 @@ npx -y --package=proofpack-cli@0.3.2 proofpack check --run "npm test" --share-sa
 npx -y --package=proofpack-cli@0.3.2 proofpack check --output .proofpack/review.md --open
 ```
 
+To render the report in Simplified Chinese, pass `--lang zh-CN` or set `PROOFPACK_LANG=zh-CN`. The default is English. This changes Markdown and JSON text fields only; schema keys, status values, paths, command stdout, and rule IDs stay unchanged.
+
+```sh
+npx -y --package=proofpack-cli@0.3.2 proofpack check --lang zh-CN
+```
+
 `--base` compares committed, staged, and working-tree changes against a resolved Git ref and excludes untracked files from that view. `--share-safe` omits branch, HEAD, base commit, file paths, output destination, command text, command output, and prompt evidence from both Markdown and JSON; status, counts, timings, and limitations remain. `--open` is opt-in, requires a written Markdown report, and uses the system opener. It never uploads the report.
 
 Review even share-safe reports before sharing: omission is best-effort and aggregate metadata may still be sensitive.

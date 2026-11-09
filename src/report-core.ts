@@ -2,6 +2,7 @@ import type { CheckResult } from "./checks.js";
 import { GitInspectionError, inspectGitChanges, type GitSnapshot } from "./git.js";
 import { buildReport, type Report } from "./report.js";
 import type { ReportFormat } from "./args.js";
+import { type ReportLanguage } from "./locale.js";
 import { buildReviewPrompts } from "./rules.js";
 
 export interface GenerateReportOptions {
@@ -11,6 +12,7 @@ export interface GenerateReportOptions {
   formats?: readonly ReportFormat[];
   outputLabel?: string;
   generatedAt?: string;
+  language?: ReportLanguage;
   inspection?: () => GitSnapshot;
 }
 
@@ -58,13 +60,14 @@ export function generateReport(options: GenerateReportOptions = {}): GenerateRep
     throw error;
   }
 
-  const reviewPrompts = buildReviewPrompts(snapshot.files);
+  const reviewPrompts = buildReviewPrompts(snapshot.files, options.language ?? "en");
   const report = buildReport(snapshot, [], reviewPrompts, {
     formats: options.formats ?? ["markdown", "json"],
     outputPath: undefined,
     ...(options.shareSafe === undefined ? {} : { shareSafe: options.shareSafe }),
     ...(options.generatedAt === undefined ? {} : { generatedAt: options.generatedAt }),
     ...(options.outputLabel === undefined ? {} : { outputLabel: options.outputLabel }),
+    ...(options.language === undefined ? {} : { language: options.language }),
   });
 
   return { report, snapshot, checkResults: [], reviewPrompts };

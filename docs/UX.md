@@ -33,6 +33,8 @@ The JSON report uses the same `0.3` evidence model. Passing, failing, unrun, tim
 
 `--base <ref>` switches the report to committed, staged, and working-tree changes against a resolved commit. The report explicitly says untracked files are excluded and shows the base ref/commit. `--share-safe` replaces identifying fields with `[OMITTED]` and omits command output from both Markdown and JSON while preserving status counts and limitations. `--open` is an explicit last step after a written Markdown report; it never opens a stdout-only report.
 
+`--lang zh-CN` renders headings, labels, limitations, review-prompt text, CLI messages, and the short summary in Simplified Chinese. `PROOFPACK_LANG=zh-CN` provides the same default without a flag; `--lang` takes precedence. English remains the default. Schema keys, status values, paths, command output, and rule IDs remain unchanged so JSON consumers and scripts are unaffected.
+
 ## Interaction rules
 
 - No interactive setup wizard, score, badge, or “safe to merge” verdict.
@@ -44,4 +46,4 @@ The JSON report uses the same `0.3` evidence model. Passing, failing, unrun, tim
 
 ## MCP host
 
-An MCP host launches `proofpack-mcp` as a local subprocess and calls `proofpack_check`. The tool returns one Markdown report by default, or the versioned JSON report with `format: "json"`. No setup wizard, project command, output file, or system opener is involved. The host may supply `cwd`, `base`, and `shareSafe`; all other evidence limits remain visible in the report.
+An MCP host launches `proofpack-mcp` as a local subprocess and calls `proofpack_check`. The tool returns one Markdown report by default, or the versioned JSON report with `format: "json"`. No setup wizard, project command, output file, or system opener is involved. The host may supply `cwd`, `base`, `shareSafe`, and `language`; all other evidence limits remain visible in the report.
