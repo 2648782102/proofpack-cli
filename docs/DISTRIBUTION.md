@@ -58,6 +58,8 @@ Order:
 4. Publish one Show HN or one Chinese community post, not both on the same day.
 5. Reply to feedback and record reproducible issues before the next release.
 
+The `awesome-mcp-servers` PR [#18924](https://github.com/punkpeye/awesome-mcp-servers/pull/18924) is open. Its automated review comment now asks for a Glama listing and score badge. Glama requires a separate account signup and a Dockerfile added directly to Glama for its checks; do not add a badge before the server is actually listed. Treat this as an optional follow-up, not a blocker for npm or MCP Registry publication.
+
 ## Guardrails
 
 - Do not buy stars, ask for vote brigades, send unsolicited DMs, or paste links into unrelated issues.
