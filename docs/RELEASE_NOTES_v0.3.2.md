@@ -2,7 +2,7 @@
 
 Tag: `v0.3.2`
 
-Status: Prepared for publication. Runtime and report behavior are unchanged from `0.3.1`.
+Status: Published to npm as `proofpack-cli@0.3.2` on 2026-11-10 (Asia/Shanghai). Runtime and report behavior are unchanged from `0.3.1`.
 
 ## Distribution
 
@@ -21,6 +21,15 @@ Status: Prepared for publication. Runtime and report behavior are unchanged from
 - `npm pack --dry-run`.
 - `mcp-publisher validate server.json` when the publisher CLI is available.
 - Clean-install smoke tests for `proofpack` and `proofpack-mcp` after npm approval.
+- `npm view proofpack-cli@0.3.2 version dist.integrity dist.shasum mcpName` reports the expected version, integrity, shasum, and `io.github.2648782102/proofpack`.
+- `npx -y --package=proofpack-cli@0.3.2 proofpack --version` prints `proofpack 0.3.2` from a clean working directory.
+- `npx -y --package=proofpack-cli@0.3.2 proofpack-mcp < /dev/null` exits with clean stdout and stderr from a clean working directory.
+- A clean temporary `npm install proofpack-cli@0.3.2` exposes both `proofpack` and `proofpack-mcp` binaries.
+
+## npm artifact
+
+- `dist.integrity`: `sha512-ZzvIKNWNqvXH/KU4IVcGFm1s/4HlCMZuqHpaVVglsC5yPir89GHM/lPIogQjV4lpWf9PbxZIW+wTK7ccTTdhyA==`
+- `dist.shasum`: `8767360b055e2a0c610aa42d2d842adecfa8d47b`
 
 ## Boundaries
 
