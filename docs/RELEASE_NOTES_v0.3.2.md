@@ -25,6 +25,9 @@ Status: Published to npm as `proofpack-cli@0.3.2` on 2026-11-10 (Asia/Shanghai).
 - `npx -y --package=proofpack-cli@0.3.2 proofpack --version` prints `proofpack 0.3.2` from a clean working directory.
 - `npx -y --package=proofpack-cli@0.3.2 proofpack-mcp < /dev/null` exits with clean stdout and stderr from a clean working directory.
 - A clean temporary `npm install proofpack-cli@0.3.2` exposes both `proofpack` and `proofpack-mcp` binaries.
+- `mcp-publisher validate server.json` passes against the MCP Registry schema.
+- `mcp-publisher publish server.json` publishes `io.github.2648782102/proofpack@0.3.2`.
+- The MCP Registry search API returns one active, latest record for `io.github.2648782102/proofpack@0.3.2`.
 
 ## npm artifact
 

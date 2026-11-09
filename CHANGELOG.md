@@ -14,7 +14,7 @@ All notable changes to Proofpack are documented here. This project is early-stag
 ### Notes
 
 - Runtime behavior, CLI flags, MCP protocol contract, and report schema are unchanged from `0.3.1`.
-- npm publication is complete for `0.3.2`. MCP Registry publication remains an explicit maintainer action.
+- npm publication and MCP Registry publication are complete for `0.3.2`.
 
 [0.3.2]: https://github.com/2648782102/proofpack-cli/releases/tag/v0.3.2
 

@@ -37,6 +37,8 @@ Publishing order matters:
 4. Install `mcp-publisher`, then run `mcp-publisher login github` and `mcp-publisher publish` from this repository.
 5. Validate `server.json` before publishing with `mcp-publisher validate`.
 
+For `0.3.2`, the npm package and the active MCP Registry record `io.github.2648782102/proofpack@0.3.2` are both published. The Registry search API returns one active, latest record. The registry hosts metadata only; it does not distribute the npm artifact.
+
 Do not open a pull request against `modelcontextprotocol/registry` to add the server. The registry hosts metadata submitted by `mcp-publisher`; its preview may still reset data.
 
 ## Community directories and posts
